@@ -1,0 +1,3572 @@
+<title>Gastrosoto</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+  :root{
+    --bg:#F1F0E8;
+    --surface:#FFFFFF;
+    --surface-2:#E9E7DC;
+    --ink:#333B31;
+    --ink-soft:#7C8578;
+    --line:#DFDDCF;
+    --veg:#6E8F72;
+    --veg-soft:#E6EBE0;
+    --protein:#C4906F;
+    --protein-soft:#F2E5DA;
+    --carb:#D3B36E;
+    --carb-soft:#F3ECD9;
+    --danger:#B57462;
+    --shadow: 0 1px 1px rgba(51,59,49,.04), 0 3px 10px rgba(51,59,49,.045);
+    --radius: 10px;
+    --radius-sm: 7px;
+
+    /* Colores por categoría de alimento (FOOD_TYPES), para dar algo más de
+       color a los iconos de receta sin tocar los colores semánticos del
+       plato de Harvard (--veg/--protein/--carb, que no cambian). "verdura"
+       reutiliza --veg y "otro" reutiliza los neutros de siempre. */
+    --food-carne:#B9563E; --food-carne-soft:#F5DCD3;
+    --food-pescado:#4E7A8C; --food-pescado-soft:#DCEBEF;
+    --food-marisco:#C97A6B; --food-marisco-soft:#F6E1DB;
+    --food-legumbre:#8C6A3A; --food-legumbre-soft:#EFE3CD;
+    --food-proteina_vegetal:#4F8156; --food-proteina_vegetal-soft:#E1EBDD;
+    --food-huevo:#C79A3D; --food-huevo-soft:#F6ECD3;
+    --food-lacteo:#C9AF7A; --food-lacteo-soft:#F5EFDD;
+    --food-cereal:#C08A3E; --food-cereal-soft:#F3E2C5;
+    --food-verdura: var(--veg); --food-verdura-soft: var(--veg-soft);
+    --food-fruta:#D2673F; --food-fruta-soft:#F7E0D2;
+    --food-otro: var(--ink-soft); --food-otro-soft: var(--surface-2);
+
+    /* Accent: the chosen colour scheme (Apariencia). Kept separate from
+       --veg/--protein/--carb, which always mean the same nutrition
+       groups regardless of the scheme picked. */
+    --accent-light:#6E8F72; --accent-soft-light:#E6EBE0;
+    --accent-dark:#8FB093;  --accent-soft-dark:#2B342C;
+    --accent: var(--accent-light);
+    --accent-soft: var(--accent-soft-light);
+  }
+  :root[data-palette="terracota"]{ --accent-light:#BE6E4E; --accent-soft-light:#F3E1D6; --accent-dark:#DE9A78; --accent-soft-dark:#3A2A21; }
+  :root[data-palette="oliva"]{ --accent-light:#A98A3A; --accent-soft-light:#F1E8CE; --accent-dark:#D9BB6E; --accent-soft-dark:#362D18; }
+  :root[data-palette="pizarra"]{ --accent-light:#56708A; --accent-soft-light:#E2E9EE; --accent-dark:#93AFC4; --accent-soft-dark:#26323C; }
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1B1F1B;
+      --surface:#242924;
+      --surface-2:#2C322B;
+      --ink:#E7E9E2;
+      --ink-soft:#9AA495;
+      --line:#3B423A;
+      --veg:#8FB093;
+      --veg-soft:#2B342C;
+      --protein:#D2A688;
+      --protein-soft:#3A2F27;
+      --carb:#D9C089;
+      --carb-soft:#39331F;
+      --danger:#D19E8E;
+      --shadow: 0 1px 1px rgba(0,0,0,.22), 0 3px 10px rgba(0,0,0,.22);
+      --accent: var(--accent-dark);
+      --accent-soft: var(--accent-soft-dark);
+      --food-carne:#E08B70; --food-carne-soft:#3D2620;
+      --food-pescado:#7FB0C2; --food-pescado-soft:#223438;
+      --food-marisco:#E2A395; --food-marisco-soft:#3B2A24;
+      --food-legumbre:#C7A671; --food-legumbre-soft:#362B18;
+      --food-proteina_vegetal:#8FBF8E; --food-proteina_vegetal-soft:#26332A;
+      --food-huevo:#E0BC6E; --food-huevo-soft:#3A311C;
+      --food-lacteo:#D8C08C; --food-lacteo-soft:#362F20;
+      --food-cereal:#DFAE6E; --food-cereal-soft:#392C18;
+      --food-fruta:#E89468; --food-fruta-soft:#3C2A1E;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#1B1F1B;
+    --surface:#242924;
+    --surface-2:#2C322B;
+    --ink:#E7E9E2;
+    --ink-soft:#9AA495;
+    --line:#3B423A;
+    --veg:#8FB093;
+    --veg-soft:#2B342C;
+    --protein:#D2A688;
+    --protein-soft:#3A2F27;
+    --carb:#D9C089;
+    --carb-soft:#39331F;
+    --danger:#D19E8E;
+    --shadow: 0 1px 1px rgba(0,0,0,.22), 0 3px 10px rgba(0,0,0,.22);
+    --accent: var(--accent-dark);
+    --accent-soft: var(--accent-soft-dark);
+    --food-carne:#E08B70; --food-carne-soft:#3D2620;
+    --food-pescado:#7FB0C2; --food-pescado-soft:#223438;
+    --food-marisco:#E2A395; --food-marisco-soft:#3B2A24;
+    --food-legumbre:#C7A671; --food-legumbre-soft:#362B18;
+    --food-proteina_vegetal:#8FBF8E; --food-proteina_vegetal-soft:#26332A;
+    --food-huevo:#E0BC6E; --food-huevo-soft:#3A311C;
+    --food-lacteo:#D8C08C; --food-lacteo-soft:#362F20;
+    --food-cereal:#DFAE6E; --food-cereal-soft:#392C18;
+    --food-fruta:#E89468; --food-fruta-soft:#3C2A1E;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Manrope',-apple-system,system-ui,sans-serif;
+    padding-inline:0;
+    height:100%;
+    overflow-x:hidden;
+  }
+  html{height:100%;}
+  h1,h2,h3,.display{
+    font-family:'Manrope',-apple-system,system-ui,sans-serif;
+    font-weight:700;
+    text-wrap:balance;
+    letter-spacing:-0.01em;
+  }
+  .mono, .num{ font-family:'Manrope',-apple-system,system-ui,sans-serif; font-variant-numeric:tabular-nums; font-feature-settings:'tnum' 1; }
+
+  #app{
+    display:flex;
+    flex-direction:column;
+    min-height:100%;
+    padding-bottom: calc(72px + env(safe-area-inset-bottom,0px));
+  }
+
+  header.topbar{
+    position:sticky;
+    top:env(safe-area-inset-top,0px);
+    z-index:20;
+    background:var(--bg);
+    padding:18px 20px 10px;
+    border-bottom:1px solid var(--line);
+  }
+  header.topbar h1{ font-size:22px; margin:0 0 2px; color:var(--ink); }
+  header.topbar p{ margin:0; font-size:13px; color:var(--ink-soft); }
+
+  main{ flex:1; padding:16px 16px 8px; max-width:640px; margin:0 auto; width:100%; }
+
+  nav.tabbar{
+    position:fixed; left:0; right:0; bottom:0; z-index:30;
+    display:flex; justify-content:space-around;
+    background:var(--surface);
+    border-top:1px solid var(--line);
+    padding: 8px 8px calc(8px + env(safe-area-inset-bottom,0px));
+  }
+  nav.tabbar button{
+    background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:3px;
+    color:var(--ink-soft); font-size:11px; font-family:inherit; padding:4px 10px; border-radius:10px;
+    cursor:pointer;
+  }
+  nav.tabbar button svg{ width:22px; height:22px; stroke:var(--ink-soft); fill:none; stroke-width:1.7; }
+  nav.tabbar button.active{ color:var(--accent); }
+  nav.tabbar button.active svg{ stroke:var(--accent); }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:14px 16px;
+    box-shadow:var(--shadow);
+  }
+  .card h2{ font-size:16.5px; margin:0 0 7px; }
+  .stack{ display:flex; flex-direction:column; gap:14px; }
+  .stack.tight{ gap:10px; }
+  .row{ display:flex; align-items:center; gap:10px; }
+  .row.between{ justify-content:space-between; }
+  .wrap{ flex-wrap:wrap; }
+  .wrap.center{ justify-content:center; }
+
+  .filter-bar{ display:flex; gap:8px; }
+  .filter-btn{
+    position:relative; font-family:inherit; font-size:13.5px; font-weight:600; color:var(--ink);
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-sm);
+    padding:10px 14px; display:flex; align-items:center; gap:7px; cursor:pointer; white-space:nowrap;
+  }
+  .filter-btn svg{ width:16px; height:16px; stroke:var(--ink-soft); fill:none; stroke-width:1.8; }
+  .filter-btn .fcount{
+    background:var(--accent); color:var(--surface); font-size:10.5px; font-weight:800; min-width:16px; height:16px;
+    border-radius:8px; display:inline-flex; align-items:center; justify-content:center; padding:0 4px;
+  }
+  .filter-group + .filter-group{ margin-top:16px; }
+
+  .btn{
+    font-family:inherit; font-size:14px; font-weight:600; border-radius:var(--radius); border:1px solid transparent;
+    padding:12px 18px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; justify-content:center;
+  }
+  .btn-primary{ background:var(--accent); color:var(--surface); }
+  .btn-primary:active{ opacity:.85; }
+  .btn-ghost{ background:transparent; color:var(--ink); border-color:var(--line); }
+  .btn-ghost:active{ background:var(--surface-2); }
+  .btn-danger{ background:transparent; color:var(--danger); border-color:var(--protein-soft); }
+  .btn-sm{ padding:8px 14px; font-size:12.5px; border-radius:var(--radius-sm); }
+  .btn-block{ width:100%; }
+  .btn:disabled{ opacity:.5; cursor:default; }
+
+  .fab{
+    position:fixed; right:20px; bottom:calc(88px + env(safe-area-inset-bottom,0px)); z-index:25;
+    background:var(--accent); color:var(--surface); border:none; width:52px; height:52px; border-radius:var(--radius);
+    box-shadow:var(--shadow); font-size:26px; display:flex; align-items:center; justify-content:center; cursor:pointer;
+    line-height:1;
+  }
+
+  input[type=text], input[type=number], input[type=date], textarea, select{
+    font-family:inherit; font-size:14.5px; color:var(--ink); background:var(--surface-2);
+    border:1px solid var(--line); border-radius:var(--radius-sm); padding:9px 12px; width:100%;
+  }
+  textarea{ resize:vertical; min-height:110px; line-height:1.55; }
+  label.field-label{ font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); margin-bottom:4px; display:block; }
+
+  .chip{
+    font-size:13px; padding:7px 14px; border-radius:var(--radius-sm); border:1px solid var(--line); background:var(--surface-2);
+    color:var(--ink-soft); cursor:pointer; user-select:none; white-space:nowrap;
+  }
+  .chip.on{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); font-weight:700; }
+  .chip.static{ cursor:default; user-select:text; }
+
+  .badge{ font-size:10.5px; padding:2px 7px; border-radius:var(--radius-sm); background:var(--surface-2); color:var(--ink-soft); font-weight:600; }
+  .badge.veg{ background:var(--veg-soft); color:var(--veg); }
+  .badge.protein{ background:var(--protein-soft); color:var(--protein); }
+  .badge.carb{ background:var(--carb-soft); color:var(--carb); }
+
+  .plate-dot{ border-radius:50%; flex-shrink:0; box-shadow: inset 0 0 0 1px rgba(0,0,0,.06); }
+  .plate-dot.na{ background:var(--surface-2)!important; border:1.5px dashed var(--line); }
+
+  .food-icon{ border-radius:50%; background:var(--surface-2); border:1px solid var(--line); color:var(--ink-soft); flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+  /* Color por categoría de alimento: fondo suave + trazo del icono, para
+     distinguir de un vistazo carne/pescado/verdura/etc. sin tocar los
+     colores semánticos del plato de Harvard. */
+  .food-icon-carne{ background:var(--food-carne-soft); color:var(--food-carne); border-color:transparent; }
+  .food-icon-pescado{ background:var(--food-pescado-soft); color:var(--food-pescado); border-color:transparent; }
+  .food-icon-marisco{ background:var(--food-marisco-soft); color:var(--food-marisco); border-color:transparent; }
+  .food-icon-legumbre{ background:var(--food-legumbre-soft); color:var(--food-legumbre); border-color:transparent; }
+  .food-icon-proteina_vegetal{ background:var(--food-proteina_vegetal-soft); color:var(--food-proteina_vegetal); border-color:transparent; }
+  .food-icon-huevo{ background:var(--food-huevo-soft); color:var(--food-huevo); border-color:transparent; }
+  .food-icon-lacteo{ background:var(--food-lacteo-soft); color:var(--food-lacteo); border-color:transparent; }
+  .food-icon-cereal{ background:var(--food-cereal-soft); color:var(--food-cereal); border-color:transparent; }
+  .food-icon-verdura{ background:var(--food-verdura-soft); color:var(--food-verdura); border-color:transparent; }
+  .food-icon-fruta{ background:var(--food-fruta-soft); color:var(--food-fruta); border-color:transparent; }
+
+  /* Indicador de procedencia de la receta: un pequeño icono de color en
+     lugar de la antigua pastilla de texto. Se usa como esquina superpuesta
+     sobre el icono de plato (.food-icon-wrap) o, en modo "inline", suelto
+     junto a una línea de texto. */
+  .food-icon-wrap{ position:relative; flex-shrink:0; display:inline-flex; }
+  .prov-badge{
+    position:absolute; top:-3px; right:-3px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    border:2px solid var(--surface); box-shadow:var(--shadow);
+  }
+  .prov-badge.inline{ position:static; border:none; box-shadow:none; }
+  .prov-badge.ai, .prov-badge.adapted{ background:var(--accent); color:var(--surface); }
+  .prov-badge.own{ background:var(--veg); color:var(--surface); }
+
+  .recipe-card{ cursor:pointer; padding:12px 14px; }
+  .recipe-card:active{ background:var(--surface-2); }
+  .recipe-card h3{ font-size:15.5px; margin:0 0 1px; }
+  .recipe-card .meta{ font-size:11.5px; color:var(--ink-soft); }
+
+  .sheet-backdrop{
+    position:fixed; inset:0; background:rgba(20,26,20,.45); z-index:50; display:flex; align-items:flex-end;
+  }
+  .sheet{
+    background:var(--bg); width:100%; max-height:92vh; overflow-y:auto; border-radius:16px 16px 0 0;
+    padding:16px 16px calc(22px + env(safe-area-inset-bottom,0px)); box-shadow: 0 -8px 30px rgba(0,0,0,.2);
+  }
+  .sheet-handle{ width:36px; height:4px; background:var(--line); border-radius:99px; margin:0 auto 12px; }
+  .sheet h2{ font-size:18px; margin:0 0 10px; }
+  .sheet-topbar{ display:flex; align-items:center; gap:6px; margin:0 0 8px; }
+  .sheet-topbar h2{ margin:0; flex:1; }
+  .sheet-back{
+    background:none; border:none; color:var(--ink); display:flex; align-items:center; justify-content:center;
+    width:36px; height:36px; padding:0; cursor:pointer; flex-shrink:0; border-radius:var(--radius-sm); margin-left:-6px;
+  }
+  .sheet-back:active{ background:var(--surface-2); }
+  .sheet-back svg{ width:22px; height:22px; stroke:currentColor; fill:none; stroke-width:2; }
+
+  .ing-row{
+    display:grid; grid-template-columns:1fr 56px 68px 24px; gap:6px; align-items:center;
+    background:var(--surface-2); border-radius:var(--radius-sm); padding:6px 7px;
+  }
+  .ing-row input{ background:var(--surface); min-width:0; padding:7px 7px; font-size:13px; }
+  .ing-row .row-remove{ justify-self:center; padding:0; }
+  .step-row{ display:flex; gap:8px; align-items:flex-start; }
+  .step-row textarea{ min-height:40px; flex:1; }
+  .row-remove{ background:none; border:none; color:var(--danger); font-size:20px; cursor:pointer; padding:2px 6px; flex-shrink:0; }
+
+  .sheet-tabbar{ margin:10px 0; }
+  .food-type-picker{ display:flex; flex-wrap:wrap; gap:7px; }
+  .food-type-picker .chip{ display:inline-flex; align-items:center; gap:6px; }
+  .food-type-picker .chip svg{ flex-shrink:0; }
+  .tts-btn{ display:inline-flex; align-items:center; gap:7px; margin-bottom:12px; }
+  .tts-btn.speaking{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+
+  .empty{ text-align:center; padding:40px 16px; color:var(--ink-soft); }
+  .empty svg{ width:44px; height:44px; stroke:var(--ink-soft); margin-bottom:10px; }
+
+  .segmented{ display:flex; background:var(--surface-2); border-radius:var(--radius); padding:4px; gap:2px; }
+  .segmented button{ flex:1; border:none; background:none; padding:9px 10px; font-size:13.5px; font-weight:600; color:var(--ink-soft); border-radius:var(--radius-sm); font-family:inherit; cursor:pointer; }
+  .segmented button.active{ background:var(--surface); color:var(--ink); box-shadow:var(--shadow); }
+
+  .day-card{ display:flex; flex-direction:column; gap:10px; }
+  .day-head{ display:flex; justify-content:space-between; align-items:baseline; }
+  .day-head .dow{ font-weight:700; font-size:16px; }
+  .day-head .diners{ font-size:12px; color:var(--ink-soft); }
+  .meal-slot{ display:flex; gap:10px; align-items:center; padding:8px 0; border-top:1px solid var(--line); }
+  .meal-slot:first-of-type{ border-top:none; }
+  .meal-slot .slot-name{ font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); width:64px; flex-shrink:0; }
+  .meal-slot .slot-body{ flex:1; min-width:0; }
+
+  .recipe-link{
+    all:unset; cursor:pointer; font-size:14px; font-weight:600; color:var(--ink); text-align:left;
+    display:block; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .recipe-link:disabled{ color:var(--ink-soft); font-weight:500; cursor:default; }
+  .recipe-link:active:not(:disabled){ color:var(--accent); }
+
+  .icon-btn{
+    background:var(--surface-2); border:1px solid var(--line); border-radius:var(--radius-sm); width:32px; height:32px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; padding:0;
+  }
+  .icon-btn svg{ width:16px; height:16px; stroke:var(--ink-soft); fill:none; stroke-width:1.8; }
+  .icon-btn:active{ background:var(--line); }
+
+  .day-extra{ margin-top:2px; padding-top:10px; border-top:1px dashed var(--line); display:flex; flex-direction:column; gap:10px; }
+  .fruit-basket{ display:flex; align-items:flex-start; gap:10px; }
+  .fruit-basket .slot-name{ width:64px; flex-shrink:0; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); padding-top:7px; }
+
+  .pick-row{
+    all:unset; box-sizing:border-box; display:flex; align-items:center; justify-content:space-between; gap:10px;
+    width:100%; padding:12px 2px; border-top:1px solid var(--line); font-family:inherit; font-size:14.5px;
+    color:var(--ink); cursor:pointer;
+  }
+  .pick-row:first-child{ border-top:none; }
+  .pick-row:active{ background:var(--surface-2); }
+  .pick-row .check{ color:var(--accent); font-weight:800; flex-shrink:0; }
+
+  .nav-row{ display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:8px; }
+  .nav-row .navlabel{ text-align:center; font-weight:700; font-size:15px; text-transform:capitalize; }
+  .nav-row .btn:first-child{ justify-self:start; }
+  .nav-row .btn:last-child{ justify-self:end; }
+
+  .whocard{ background:var(--accent-soft); border:1px solid var(--accent); border-radius:var(--radius); padding:14px 16px; }
+  .whocard h3{ font-size:13px; margin:0 0 6px; color:var(--accent); text-transform:uppercase; letter-spacing:.03em; font-weight:800; }
+  .whocard ul{ margin:0; padding-left:18px; font-size:13px; color:var(--ink); }
+  .whocard li{ margin-bottom:3px; }
+
+  .palette-row{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+  .palette-swatch{ display:flex; flex-direction:column; align-items:center; gap:6px; background:none; border:none; cursor:pointer; font-family:inherit; padding:2px; }
+  .palette-swatch .dot{ width:36px; height:36px; border-radius:50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+  .palette-swatch .ring{ width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid transparent; }
+  .palette-swatch.active .ring{ border-color:var(--ink); }
+  .palette-swatch span{ font-size:11.5px; color:var(--ink-soft); }
+  .palette-swatch.active span{ color:var(--ink); font-weight:700; }
+
+  .month-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
+  .month-cell{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-sm); padding:6px 5px; min-height:58px; font-size:10.5px; cursor:pointer; display:flex; flex-direction:column; gap:3px; }
+  .month-cell .dnum{ font-weight:700; font-size:11.5px; }
+  .month-cell .dmeal{ color:var(--ink-soft); line-height:1.2; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  .month-cell.faded{ opacity:.35; }
+  .month-cell.away-cell{ background:var(--protein-soft); border-color:var(--protein); }
+  .month-cell.away-cell .dnum{ color:var(--protein); }
+  .month-dow-label{ text-align:center; font-size:10px; color:var(--ink-soft); font-weight:700; text-transform:uppercase; }
+  .cal-legend{ display:flex; gap:14px; align-items:center; flex-wrap:wrap; }
+  .cal-legend .dot{ width:9px; height:9px; border-radius:2px; display:inline-block; margin-right:5px; vertical-align:middle; }
+
+  .member-row{ display:flex; align-items:center; justify-content:space-between; padding:11px 2px; border-top:1px solid var(--line); gap:10px; }
+  .member-row:first-child{ border-top:none; }
+
+  .toast{
+    position:fixed; left:50%; transform:translateX(-50%); bottom:calc(96px + env(safe-area-inset-bottom,0px));
+    background:var(--ink); color:var(--bg); padding:10px 18px; border-radius:99px; font-size:13px; z-index:60;
+    box-shadow:var(--shadow);
+  }
+  .thinking{ display:flex; align-items:center; gap:8px; color:var(--ink-soft); font-size:13.5px; padding:10px 0; }
+  .spinner{ width:16px; height:16px; border:2px solid var(--line); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce){ .spinner{ animation:none; } }
+
+  a{ color:var(--accent); }
+  .hint{ font-size:12px; color:var(--ink-soft); }
+
+  .meal-slot-grid{ display:flex; flex-direction:column; gap:8px; }
+  .meal-slot-grid .msg-row{ display:flex; gap:8px; }
+  .meal-slot-grid .msg-row .chip{ flex:1; text-align:center; padding:7px 6px; }
+
+  .shopping-add{ display:flex; flex-direction:column; gap:8px; }
+  .shopping-add .row{ gap:8px; }
+  .mic-btn{
+    background:var(--surface-2); border:1px solid var(--line); border-radius:var(--radius-sm); width:44px; height:44px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; padding:0; color:var(--ink-soft);
+  }
+  .mic-btn svg{ width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:1.8; }
+  .mic-btn.listening{ background:var(--danger); border-color:var(--danger); color:var(--surface); animation:micpulse 1.4s ease-in-out infinite; }
+  @keyframes micpulse{ 0%,100%{ opacity:1; } 50%{ opacity:.55; } }
+  @media (prefers-reduced-motion: reduce){ .mic-btn.listening{ animation:none; } }
+
+  .shop-group{ margin-bottom:2px; }
+  .shop-group-head{ display:flex; align-items:center; gap:7px; padding:6px 2px 4px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-soft); }
+  .shop-row{ display:flex; align-items:center; gap:10px; padding:8px 2px; border-top:1px solid var(--line); }
+  .shop-row:first-child{ border-top:none; }
+  .shop-check{
+    width:20px; height:20px; border-radius:50%; border:1.6px solid var(--line); flex-shrink:0; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; padding:0; background:var(--surface); color:var(--surface);
+    font-size:12px; font-weight:800; line-height:1;
+  }
+  .shop-check.on{ background:var(--accent); border-color:var(--accent); }
+  .shop-row .shop-name{ flex:1; min-width:0; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .shop-row.checked .shop-name{ text-decoration:line-through; color:var(--ink-soft); }
+  .shop-bought-toggle{ background:none; border:none; color:var(--ink-soft); font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.03em; padding:8px 2px; cursor:pointer; width:100%; text-align:left; }
+
+  .shop-group-icon{ display:inline-flex; }
+
+  /* ---- Acceso (login / registro), fuera de Claude ---- */
+  .auth-gate{ min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
+  .auth-card{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:28px 22px; max-width:360px; width:100%; }
+  .auth-card h1{ font-size:24px; margin:0 0 4px; text-align:center; }
+  .auth-card > .hint{ text-align:center; margin-bottom:18px; }
+  .auth-error{ background:var(--protein-soft); color:var(--danger); border-radius:var(--radius-sm); padding:9px 12px; font-size:13px; margin-bottom:2px; }
+  #logoutBtn svg{ width:18px; height:18px; stroke:var(--ink-soft); fill:none; stroke-width:1.8; }
+</style>
+
+<div id="authGate" class="auth-gate" hidden></div>
+
+<div id="app" hidden>
+  <header class="topbar">
+    <div class="row between" style="align-items:flex-start">
+      <div>
+        <h1 class="display" id="topbarTitle">Gastrosoto</h1>
+        <p id="topbarSubtitle">Recetas y planificación semanal</p>
+      </div>
+      <button type="button" class="icon-btn" id="logoutBtn" title="Cerrar sesión" aria-label="Cerrar sesión" hidden>
+        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+      </button>
+    </div>
+  </header>
+  <main id="main"></main>
+</div>
+
+<nav class="tabbar" hidden>
+  <button data-tab="recetas" class="active">
+    <svg viewBox="0 0 24 24"><path d="M4 3v18M4 3c3 0 3 2 3 4s0 4-3 4M20 3v18M20 3c-4 0-6 3-6 7s2 5 2 5"/></svg>
+    Recetas
+  </button>
+  <button data-tab="plan">
+    <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+    Plan
+  </button>
+  <button data-tab="compra">
+    <svg viewBox="0 0 24 24"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6.2"/><circle cx="9.5" cy="20.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="17" cy="20.5" r="1.3" fill="currentColor" stroke="none"/></svg>
+    Compra
+  </button>
+  <button data-tab="familia">
+    <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M14.5 14.3c2.6.2 4.5 2.3 4.5 5.7"/></svg>
+    Familia
+  </button>
+  <button data-tab="apariencia">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5A8.5 8.5 0 0 0 12 20.5Z" fill="currentColor" stroke="none"/></svg>
+    Apariencia
+  </button>
+</nav>
+
+<div id="sheetHost"></div>
+<div id="toastHost"></div>
+
+<!-- Promesa que resuelve cuando Firebase esté listo (o nunca, si no hay
+     acceso a la red externa — por ejemplo si esta página se sigue abriendo
+     dentro de un artefacto de Claude, donde no se pueden cargar scripts
+     externos). Se declara aparte, en un script normal, para que exista
+     tanto si el módulo de abajo llega a cargar como si no. -->
+<script>
+  window.__firebaseReady = new Promise((resolve)=>{ window.__resolveFirebaseReady = resolve; });
+</script>
+
+<!-- Configuración de Firebase (Authentication + Firestore). Estas claves
+     son públicas por diseño (no son secretas); la seguridad real la dan
+     las reglas de Firestore, no el ocultamiento de esta configuración. -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+  import {
+    getAuth, onAuthStateChanged, createUserWithEmailAndPassword,
+    signInWithEmailAndPassword, signOut, sendPasswordResetEmail,
+  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+  import {
+    getFirestore, collection, doc, onSnapshot, getDoc, setDoc, updateDoc, deleteDoc, addDoc,
+  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCGkkOWP9TheDPLXLsWwGcWbrNy7aGOBrE",
+    authDomain: "gastrosoto-f6372.firebaseapp.com",
+    projectId: "gastrosoto-f6372",
+    storageBucket: "gastrosoto-f6372.firebasestorage.app",
+    messagingSenderId: "260070818111",
+    appId: "1:260070818111:web:aa65785324fc1defead38a",
+  };
+
+  try{
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const firestore = getFirestore(app);
+    window.__resolveFirebaseReady({
+      auth, firestore,
+      onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail,
+      collection, doc, onSnapshot, getDoc, setDoc, updateDoc, deleteDoc, addDoc,
+    });
+  }catch(e){
+    console.warn('No se ha podido inicializar Firebase', e);
+    window.__resolveFirebaseReady(null);
+  }
+</script>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------------------------------------------------------------------
+   Utilities
+--------------------------------------------------------------------- */
+const $ = (sel, root) => (root||document).querySelector(sel);
+const $all = (sel, root) => Array.from((root||document).querySelectorAll(sel));
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Math.random().toString(36).slice(2,10);
+
+/* Los ids internos (desayuno/almuerzo/comida/cena/merienda) no cambian aunque
+   las etiquetas visibles sí: "comida" se muestra como "Almuerzo" y "almuerzo"
+   se muestra como "Media mañana", para encajar con cómo lo llama la familia. */
+const MEAL_TYPES = [
+  {id:'desayuno', label:'Desayuno'},
+  {id:'almuerzo', label:'Media mañana'},
+  {id:'comida', label:'Almuerzo'},
+  {id:'merienda', label:'Merienda'},
+  {id:'cena', label:'Cena'},
+];
+const SEASONS = [
+  {id:'todo_el_año', label:'Todo el año'},
+  {id:'invierno', label:'Invierno'},
+  {id:'verano', label:'Verano'},
+  {id:'entretiempo', label:'Entretiempo'},
+];
+const ROLES = [
+  {id:'plato_principal', label:'Plato principal'},
+  {id:'guarnicion', label:'Guarnición'},
+  {id:'postre', label:'Postre'},
+  {id:'desayuno_item', label:'Desayuno / merienda'},
+  {id:'bebida', label:'Bebida'},
+];
+const AWAY_REASONS = [
+  {id:'trabajo', label:'Trabajo'},
+  {id:'vacaciones', label:'Vacaciones'},
+  {id:'otro', label:'Otro'},
+];
+/* Orígenes de cocina para el buscador de ideas con IA. "asiatica" agrupa
+   variantes habituales (china, japonesa, tailandesa, india…). */
+const CUISINE_OPTIONS = [
+  {id:'espanola', label:'Española'},
+  {id:'italiana', label:'Italiana'},
+  {id:'mediterranea', label:'Mediterránea'},
+  {id:'mexicana', label:'Mexicana'},
+  {id:'asiatica', label:'Asiática (china, japonesa, tailandesa, india…)'},
+  {id:'internacional', label:'Otra / internacional'},
+];
+const DIET_OPTIONS = [
+  {id:'vegetariano', label:'Vegetariano'},
+  {id:'vegano', label:'Vegano'},
+  {id:'sin_gluten', label:'Sin gluten'},
+  {id:'sin_lactosa', label:'Sin lactosa'},
+];
+
+/* Categorías del ingrediente principal de un plato, con un icono sencillo
+   de línea para reconocerlas de un vistazo en las tarjetas de receta y en
+   el plan semanal. */
+const FOOD_TYPES = [
+  {id:'carne', label:'Carne'},
+  {id:'pescado', label:'Pescado'},
+  {id:'marisco', label:'Marisco'},
+  {id:'legumbre', label:'Legumbre'},
+  {id:'proteina_vegetal', label:'Proteína vegetal'},
+  {id:'huevo', label:'Huevo'},
+  {id:'lacteo', label:'Lácteo'},
+  {id:'cereal', label:'Cereal'},
+  {id:'verdura', label:'Verdura'},
+  {id:'fruta', label:'Fruta'},
+  {id:'otro', label:'Otro'},
+];
+const FOOD_ICONS = {
+  carne: `<path d="M14 3.5c2.7 0 5 2.3 5 5 0 1.8-.8 2.8-1.6 3.6l-1.6 1.6a2.6 2.6 0 0 0-.76 1.83v.3c0 .68-.27 1.34-.76 1.83l-2.2 2.2a2.4 2.4 0 0 1-3.4-3.4l2.2-2.2c.5-.5 1.15-.76 1.83-.76h.3c.68 0 1.34-.27 1.83-.76l1.4-1.4"/><circle cx="6.7" cy="17.3" r="1.3" fill="currentColor" stroke="none"/>`,
+  pescado: `<path d="M2.5 12c3-3.8 7.7-5.7 11.5-5.7 3.3 0 6.5 2.5 6.5 5.7s-3.2 5.7-6.5 5.7c-3.8 0-8.5-1.9-11.5-5.7Z"/><circle cx="14.3" cy="10.6" r=".9" fill="currentColor" stroke="none"/><path d="M20.5 12c1 .5 1.5 1.3 2 2M20.5 12c1-.5 1.5-1.3 2-2"/>`,
+  marisco: `<path d="M12 21c-3.3 0-5.3-2.3-5.3-5.6 0-2 1-3.7 2.2-5C7.8 8.2 6.6 6.4 6.6 4.4c1.7 0 3.3 1 4.2 2.4a3.6 3.6 0 0 1 2.4-1c.9 0 1.8.4 2.4 1 .9-1.4 2.5-2.4 4.2-2.4 0 2-1.2 3.8-2.3 6C18.7 11.7 19.7 13.4 19.7 15.4c0 3.3-2 5.6-5 5.6-.95 0-1.75-.28-2.4-.75-.65.47-1.45.75-2.3.75Z"/>`,
+  legumbre: `<path d="M6.2 9.8c0-3.3 2.6-6.3 5.8-6.3s5.8 3 5.8 6.3c0 3.9-2 9.9-5.8 9.9s-5.8-6-5.8-9.9Z"/><path d="M8.6 9c1 .55 2 .55 3 0M8.6 12.3c1 .55 2 .55 3 0M8.8 15.6c.85.4 1.65.5 2.4.2"/>`,
+  proteina_vegetal: `<rect x="5" y="7.5" width="14" height="11.5" rx="2"/><path d="M9 7.5V5.8A2.3 2.3 0 0 1 11.3 3.5h1.4a2.3 2.3 0 0 1 2.3 2.3v1.7M5 12.5h14"/>`,
+  huevo: `<path d="M12 21c-4 0-6.6-3.5-6.6-7.7C5.4 8.6 8.4 3 12 3s6.6 5.6 6.6 10.3S16 21 12 21Z"/>`,
+  lacteo: `<path d="M9.2 3h5.6v3.6l1.9 3.2v9a2 2 0 0 1-2 2H9.3a2 2 0 0 1-2-2v-9l1.9-3.2V3Z"/><path d="M7.3 13.2h9.4"/>`,
+  cereal: `<path d="M12 21V9.2"/><path d="M12 9.2c-3 0-5-2-5-5 3 0 5 2 5 5ZM12 9.2c3 0 5-2 5-5-3 0-5 2-5 5Z"/><path d="M12 14.3c-2.2 0-3.7-1.4-3.7-3.5 2.2 0 3.7 1.4 3.7 3.5ZM12 14.3c2.2 0 3.7-1.4 3.7-3.5-2.2 0-3.7 1.4-3.7 3.5Z"/>`,
+  verdura: `<path d="M12 21c-4.2 0-7.2-3.2-7.2-8.2 0-3.6 2.1-6.2 4.2-7.7M12 21c4.2 0 7.2-3.2 7.2-8.2 0-3.6-2.1-6.2-4.2-7.7M12 21V9.4"/><path d="M12 9.4c0-2.1.55-3.7 2.1-4.7-1 2.5-1.5 4.6-2.1 4.7ZM12 9.4c0-2.1-.55-3.7-2.1-4.7 1 2.5 1.5 4.6 2.1 4.7Z"/>`,
+  fruta: `<path d="M12 10.2c-4.1 0-6.7 3-6.7 6.6S8.6 21 12 21s6.7-1 6.7-4.2-2.6-6.6-6.7-6.6Z"/><path d="M12 10.2c0-2 .6-3.5 2.1-4.6M10.2 4c1.05.3 1.8 1 2.1 2.1"/>`,
+  otro: `<circle cx="12" cy="12" r="8.5"/><path d="M8.7 9h.01M15.3 9h.01M8.3 14c1 1.4 2.2 2.1 3.7 2.1s2.7-.7 3.7-2.1"/>`,
+};
+/* Devuelve el icono SVG del tipo de alimento (o el de "otro" si no hay
+   ninguno reconocible), listo para insertar en el HTML. */
+function foodTypeIcon(id, size){
+  size = size || 20;
+  const path = FOOD_ICONS[id] || FOOD_ICONS.otro;
+  return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round">${path}</svg>`;
+}
+/* Icono envuelto en un círculo con fondo suave: es el que se usa como
+   imagen principal de una receta en tarjetas y filas del plan. */
+function foodIconBadge(foodType, size){
+  size = size || 40;
+  const inner = Math.round(size*0.61);
+  const cat = FOOD_TYPES.some(f=>f.id===foodType) ? foodType : 'otro';
+  return `<div class="food-icon food-icon-${cat}" style="width:${size}px;height:${size}px">${foodTypeIcon(foodType, inner)}</div>`;
+}
+
+/* ---- Indicador de procedencia de la receta (icono de color, no pastilla de texto) ---- */
+const PROV_ICONS = {
+  ai: `<path d="M12 3v3.2M12 17.8V21M3 12h3.2M17.8 12H21M6 6l2.2 2.2M15.8 15.8 18 18M18 6l-2.2 2.2M8.2 15.8 6 18"/>`,
+  adapted: `<path d="M4 19.5 4.9 16 15 5.9a1.3 1.3 0 0 1 1.9 0l1.2 1.2a1.3 1.3 0 0 1 0 1.9L8 19l-3.5.9Z"/><path d="M13.2 7.7l3.1 3.1"/>`,
+  own: `<path d="M4.5 11 12 4.5 19.5 11"/><path d="M6.5 9.7V19a1 1 0 0 0 1 1H10v-5h4v5h2.5a1 1 0 0 0 1-1V9.7"/>`,
+};
+function provenanceIcon(kind, size){
+  size = size || 12;
+  return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${PROV_ICONS[kind]||PROV_ICONS.ai}</svg>`;
+}
+function provenanceKind(r){
+  if(r.source==='claude') return r.adaptedByUser ? 'adapted' : 'ai';
+  return 'own';
+}
+function provenanceTitle(r){
+  const kind = provenanceKind(r);
+  if(kind==='ai') return 'Sugerencia de Gastrosoto';
+  if(kind==='adapted') return 'Sugerencia de Gastrosoto, adaptada por ti';
+  return 'Tu receta';
+}
+/* size: tamaño en px del icono; inline: true para usarlo suelto en una
+   línea de texto en vez de como esquina superpuesta sobre un food-icon. */
+function provenanceBadgeHTML(r, size, inline){
+  size = size || 18;
+  const kind = provenanceKind(r);
+  const cls = 'prov-badge ' + kind + (inline ? ' inline' : '');
+  return `<span class="${cls}" style="width:${size}px;height:${size}px" title="${esc(provenanceTitle(r))}" aria-label="${esc(provenanceTitle(r))}">${provenanceIcon(kind, Math.round(size*0.6))}</span>`;
+}
+/* Adivina el tipo de alimento principal de una receta a partir de su
+   nombre y de sus ingredientes, buscando coincidencias con listas de
+   palabras clave por categoría. No pretende ser perfecto: es sólo una
+   ayuda para no tener que elegirlo siempre a mano. */
+const FOOD_TYPE_KEYWORDS = {
+  carne: ['pollo','pavo','ternera','cerdo','cordero','carne','jamon','chorizo','panceta','solomillo','chuleta','conejo','vacuno','bacon','lomo'],
+  pescado: ['salmon','merluza','atun','bacalao','caballa','dorada','lubina','pescado','trucha','rape','boqueron','sardina','gallo','lenguado'],
+  marisco: ['gamba','langostino','mejillon','calamar','marisco','pulpo','sepia','almeja','cigala','camaron','navaja','percebe'],
+  legumbre: ['lenteja','garbanzo','judia','alubia','legumbre','haba'],
+  proteina_vegetal: ['tofu','seitan','tempeh','soja','soya','heura'],
+  huevo: ['huevo'],
+  lacteo: ['queso','yogur','leche','nata','requeson','cuajada','mantequilla'],
+  cereal: ['arroz','pasta','harina','pan','quinoa','cuscus','avena','espagueti','macarron','fideo','trigo','maiz','tortilla de maiz'],
+  verdura: ['lechuga','tomate','calabacin','pimiento','cebolla','zanahoria','verdura','espinaca','brocoli','puerro','calabaza','berenjena','champinon','seta','acelga','pepino','ajo'],
+  fruta: ['manzana','platano','naranja','fresa','pera','fruta','melon','sandia','uva','kiwi','melocoton','ciruela','albaricoque'],
+};
+function stripAccents(s){
+  try{ return String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,''); }
+  catch(e){ return String(s||''); }
+}
+function guessFoodType(rec){
+  const texts = [stripAccents(rec?.name).toLowerCase()]
+    .concat((rec?.ingredients||[]).map(i=> stripAccents(i?.name).toLowerCase()));
+  const counts = {};
+  for(const text of texts){
+    if(!text) continue;
+    for(const cat of Object.keys(FOOD_TYPE_KEYWORDS)){
+      for(const kw of FOOD_TYPE_KEYWORDS[cat]){
+        if(text.includes(kw)) counts[cat] = (counts[cat]||0) + 1;
+      }
+    }
+  }
+  let best = 'otro', bestScore = 0;
+  for(const cat of Object.keys(counts)){
+    if(counts[cat] > bestScore){ bestScore = counts[cat]; best = cat; }
+  }
+  return best;
+}
+
+/* Estilo de cocción del plato: sirve, junto al ingrediente principal, para
+   dar variedad semana a semana (no comer siempre "estofado", aunque cambie
+   el ingrediente). */
+const COOK_STYLES = [
+  {id:'estofado', label:'Estofado'},
+  {id:'ensalada', label:'Ensalada'},
+  {id:'horno', label:'Horno'},
+  {id:'plancha', label:'Plancha'},
+  {id:'guiso', label:'Guiso'},
+  {id:'pure', label:'Puré'},
+  {id:'salteado', label:'Salteado'},
+  {id:'asado', label:'Asado'},
+  {id:'wok', label:'Wok'},
+  {id:'sopa', label:'Sopa'},
+  {id:'crema', label:'Crema'},
+  {id:'frito', label:'Frito'},
+  {id:'otro', label:'Otro'},
+];
+const COOK_STYLE_KEYWORDS = [
+  ['estofado','estofa'],
+  ['ensalada','ensalad'],
+  ['horno','horno'],
+  ['plancha','plancha'],
+  ['guiso','guiso'],
+  ['pure','pure'],
+  ['salteado','saltead'],
+  ['asado','asad'],
+  ['wok','wok'],
+  ['sopa','sopa'],
+  ['crema','crema'],
+  ['frito','frit'],
+];
+/* Adivina el estilo de cocción a partir del nombre del plato; "otro" si no
+   encaja con ninguna palabra clave conocida. */
+function guessCookStyle(rec){
+  const text = stripAccents(rec?.name).toLowerCase();
+  for(const [id,kw] of COOK_STYLE_KEYWORDS){
+    if(text.includes(kw)) return id;
+  }
+  return 'otro';
+}
+
+const WEEKDAYS = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+const MONTHS = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+function todayISO(d){ d = d||new Date(); return d.toISOString().slice(0,10); }
+function addDays(iso, n){ const d = new Date(iso+'T00:00:00'); d.setDate(d.getDate()+n); return todayISO(d); }
+function startOfWeek(iso){ const d = new Date(iso+'T00:00:00'); const dow = (d.getDay()+6)%7; d.setDate(d.getDate()-dow); return todayISO(d); }
+function isoWeekKey(iso){
+  const d = new Date(iso+'T00:00:00');
+  const target = new Date(d.valueOf());
+  const dayNr = (d.getDay()+6)%7;
+  target.setDate(target.getDate()-dayNr+3);
+  const firstThursday = new Date(target.getFullYear(),0,4);
+  const diff = target - firstThursday;
+  const week = 1 + Math.round(diff/(7*24*3600*1000));
+  return target.getFullYear()+'-W'+String(week).padStart(2,'0');
+}
+function fmtDateHuman(iso){
+  const d = new Date(iso+'T00:00:00');
+  return WEEKDAYS[(d.getDay()+6)%7]+' '+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3);
+}
+function monthKey(iso){ return iso.slice(0,7); }
+function monthLabel(mk){ const [y,m]=mk.split('-'); return MONTHS[parseInt(m,10)-1]+' '+y; }
+function seasonForMonth(m){ // m 1-12, Spain hemisphere
+  if([12,1,2].includes(m)) return 'invierno';
+  if([6,7,8].includes(m)) return 'verano';
+  return 'entretiempo';
+}
+
+function toast(msg){
+  const host = $('#toastHost');
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  host.appendChild(el);
+  setTimeout(()=>el.remove(), 2600);
+}
+
+function plateDot(plate, size){
+  size = size||30;
+  if(!plate || ((plate.veg||0)+(plate.protein||0)+(plate.carbs||0)) < 5){
+    return `<div class="plate-dot na" style="width:${size}px;height:${size}px"></div>`;
+  }
+  const veg = Math.max(0,plate.veg||0), pro = Math.max(0,plate.protein||0), carb = Math.max(0,plate.carbs||0);
+  const total = veg+pro+carb || 1;
+  const p1 = veg/total*100, p2 = (veg+pro)/total*100;
+  const bg = `conic-gradient(var(--veg) 0% ${p1}%, var(--protein) ${p1}% ${p2}%, var(--carb) ${p2}% 100%)`;
+  return `<div class="plate-dot" style="width:${size}px;height:${size}px;background:${bg}"></div>`;
+}
+
+function harvardScore(plate){
+  // distance from ideal 50/25/25, lower is better
+  if(!plate) return 999;
+  const veg = plate.veg||0, pro = plate.protein||0, carb = plate.carbs||0;
+  return Math.abs(veg-50) + Math.abs(pro-25) + Math.abs(carb-25);
+}
+
+/* ---------------------------------------------------------------------
+   State + persistence (db capability)
+--------------------------------------------------------------------- */
+const state = {
+  tab: 'recetas',
+  db: null,
+  sample: null,
+  recipes: [],       // {id, ...data}
+  family: [],        // {id, name}
+  shoppingList: [],  // {id, name, category, checked, createdAt}
+  attendanceCache: {}, // date -> {away:[...]}
+  planView: 'semanal',
+  weekStart: startOfWeek(todayISO()),
+  monthCursor: monthKey(todayISO()),
+  currentWeekPlan: null,
+  currentMonthPlan: null,
+  mealSlots: ['comida','cena'],
+  recipeFilter: {mealType:null, season:null, temp:null, role:null, q:''},
+  themeChoice: 'auto',
+  paletteChoice: 'salvia',
+  familiaMemberId: null,
+  familiaReason: 'trabajo',
+  familiaMonthCursor: monthKey(todayISO()),
+  familiaLocation: '',
+  familiaLocationLoaded: false,
+  // Acceso (fuera de Claude, con Firebase)
+  fb: null,          // {auth, firestore, onAuthStateChanged, ...} o null si no hay Firebase
+  user: null,        // usuario de Firebase Auth ya identificado, o null
+  authView: 'login',
+  authError: '',
+  authEmailDraft: '',
+  _unsubs: [],        // funciones para cancelar las suscripciones de Firestore
+};
+
+function applyTheme(choice){
+  const root = document.documentElement;
+  if(choice==='light') root.setAttribute('data-theme','light');
+  else if(choice==='dark') root.setAttribute('data-theme','dark');
+  else root.removeAttribute('data-theme');
+}
+function setThemeChoice(choice){
+  state.themeChoice = choice;
+  applyTheme(choice);
+  try{ localStorage.setItem('gastrosoto-theme', choice); }catch(e){}
+}
+function loadThemeChoice(){
+  let choice = 'auto';
+  try{ choice = localStorage.getItem('gastrosoto-theme') || 'auto'; }catch(e){}
+  state.themeChoice = choice;
+  applyTheme(choice);
+}
+
+const PALETTES = [
+  {id:'salvia', label:'Salvia', swatch:'#6E8F72'},
+  {id:'terracota', label:'Terracota', swatch:'#BE6E4E'},
+  {id:'oliva', label:'Oliva', swatch:'#A98A3A'},
+  {id:'pizarra', label:'Pizarra', swatch:'#56708A'},
+];
+function applyPalette(choice){
+  const root = document.documentElement;
+  if(choice && choice!=='salvia') root.setAttribute('data-palette', choice);
+  else root.removeAttribute('data-palette');
+}
+function setPaletteChoice(choice){
+  state.paletteChoice = choice;
+  applyPalette(choice);
+  try{ localStorage.setItem('gastrosoto-palette', choice); }catch(e){}
+}
+function loadPaletteChoice(){
+  let choice = 'salvia';
+  try{ choice = localStorage.getItem('gastrosoto-palette') || 'salvia'; }catch(e){}
+  state.paletteChoice = choice;
+  applyPalette(choice);
+}
+
+/* Fruta de temporada en España, por mes (1-12). Es una guía orientativa,
+   no una lista exhaustiva. */
+const SEASONAL_FRUITS = {
+  1:['Naranja','Mandarina','Pera','Kiwi','Plátano'],
+  2:['Naranja','Mandarina','Pera','Kiwi','Plátano'],
+  3:['Fresa','Naranja','Pera','Plátano','Kiwi'],
+  4:['Fresa','Nispero','Plátano','Pera','Naranja'],
+  5:['Fresa','Nispero','Cereza','Albaricoque','Plátano'],
+  6:['Cereza','Albaricoque','Melocotón','Ciruela','Sandía'],
+  7:['Sandía','Melón','Melocotón','Ciruela','Higo'],
+  8:['Sandía','Melón','Uva','Higo','Melocotón'],
+  9:['Uva','Higo','Melón','Manzana','Pera'],
+  10:['Manzana','Pera','Uva','Membrillo','Granada'],
+  11:['Manzana','Pera','Caqui','Granada','Naranja'],
+  12:['Naranja','Mandarina','Manzana','Pera','Caqui'],
+};
+function seasonalFruitsForDate(dateISO){
+  const m = parseInt(dateISO.slice(5,7),10);
+  return SEASONAL_FRUITS[m] || [];
+}
+
+async function initCapabilities(){
+  try{ state.db = await window.claude?.use?.('db') || null; }catch(e){ state.db = null; }
+  try{ state.sample = await window.claude?.use?.('sample') || null; }catch(e){ state.sample = null; }
+}
+
+/* ---------------------------------------------------------------------
+   Acceso con cuenta propia (fuera de Claude): Firebase Authentication +
+   Firestore. Cada cuenta ve únicamente sus propios datos, guardados bajo
+   users/{uid}/... — el aislamiento real lo dan las reglas de Firestore,
+   no esta capa.
+--------------------------------------------------------------------- */
+
+// Espera a que el módulo de Firebase (declarado en el HTML) esté listo,
+// con un margen de tiempo por si esta misma página se abre dentro de un
+// artefacto de Claude, donde no se pueden cargar scripts externos y esa
+// promesa nunca llegaría a resolverse por sí sola.
+async function initFirebase(){
+  try{
+    state.fb = await Promise.race([
+      window.__firebaseReady,
+      new Promise(resolve=> setTimeout(()=>resolve(null), 4000)),
+    ]);
+  }catch(e){ state.fb = null; }
+}
+
+// Adaptador con la misma forma que la capacidad "db" de Claude
+// (collection().onSnapshot()/.add(), doc().get()/.set()/.update()/.delete())
+// pero respaldado por Firestore de verdad, con todo escrito bajo
+// users/{uid}/... para que cada cuenta tenga sus propios datos.
+function makeFirestoreDb(fb, uid){
+  const { firestore, collection, doc, onSnapshot, getDoc, setDoc, updateDoc, deleteDoc, addDoc } = fb;
+  const full = (path) => `users/${uid}/${path}`;
+  return {
+    collection(path){
+      const ref = collection(firestore, full(path));
+      return {
+        onSnapshot(cb, errCb){
+          return onSnapshot(ref, snap=> cb({docs: snap.docs}), errCb);
+        },
+        add(data){ return addDoc(ref, data); },
+      };
+    },
+    doc(path){
+      const ref = doc(firestore, full(path));
+      return {
+        async get(){
+          const s = await getDoc(ref);
+          return { exists: s.exists(), data: ()=> s.data() };
+        },
+        set(data){ return setDoc(ref, data); },
+        update(data){ return updateDoc(ref, data); },
+        delete(){ return deleteDoc(ref); },
+      };
+    },
+  };
+}
+
+function unsubscribeAll(){
+  (state._unsubs||[]).forEach(fn=>{ try{ fn(); }catch(e){} });
+  state._unsubs = [];
+}
+
+function resetHouseholdData(){
+  state.recipes = [];
+  state.family = [];
+  state.shoppingList = [];
+  state.attendanceCache = {};
+  state.currentWeekPlan = null;
+  state.currentMonthPlan = null;
+  state.familiaLocation = '';
+  state.familiaLocationLoaded = false;
+}
+
+function showApp(){
+  const authGate = $('#authGate'); if(authGate) authGate.hidden = true;
+  const app = $('#app'); if(app) app.hidden = false;
+  const nav = $('nav.tabbar'); if(nav) nav.hidden = false;
+  const logoutBtn = $('#logoutBtn'); if(logoutBtn) logoutBtn.hidden = false;
+}
+
+function showAuthGate(){
+  const app = $('#app'); if(app) app.hidden = true;
+  const nav = $('nav.tabbar'); if(nav) nav.hidden = true;
+  const logoutBtn = $('#logoutBtn'); if(logoutBtn) logoutBtn.hidden = true;
+  const gate = $('#authGate');
+  if(!gate) return;
+  gate.hidden = false;
+  gate.innerHTML = authGateHTML();
+  wireAuthGate();
+}
+
+function authGateHTML(){
+  const isRegister = state.authView === 'register';
+  return `
+    <div class="auth-card">
+      <h1 class="display">Gastrosoto</h1>
+      <p class="hint">${isRegister ? 'Crea una cuenta para guardar tus recetas, tu familia y tu plan.' : 'Inicia sesión para ver tus recetas y tu plan.'}</p>
+      ${state.authError ? `<p class="auth-error">${esc(state.authError)}</p>` : ''}
+      <div class="stack tight">
+        <div>
+          <label class="field-label">Correo electrónico</label>
+          <input type="email" id="authEmail" autocomplete="email" value="${esc(state.authEmailDraft||'')}">
+        </div>
+        <div>
+          <label class="field-label">Contraseña</label>
+          <input type="password" id="authPassword" autocomplete="${isRegister?'new-password':'current-password'}">
+        </div>
+        ${isRegister ? `
+        <div>
+          <label class="field-label">Repite la contraseña</label>
+          <input type="password" id="authPassword2" autocomplete="new-password">
+        </div>` : ''}
+        <button type="button" class="btn btn-primary btn-block" id="authSubmitBtn">${isRegister ? 'Crear cuenta' : 'Iniciar sesión'}</button>
+        ${!isRegister ? `<button type="button" class="btn btn-ghost btn-block" id="authForgotBtn">¿Olvidaste tu contraseña?</button>` : ''}
+        <button type="button" class="btn btn-ghost btn-block" id="authToggleBtn">${isRegister ? '¿Ya tienes cuenta? Inicia sesión' : '¿No tienes cuenta? Crear una'}</button>
+      </div>
+    </div>`;
+}
+
+function wireAuthGate(){
+  const host = $('#authGate');
+  if(!host) return;
+  $('#authToggleBtn', host)?.addEventListener('click', ()=>{
+    state.authView = state.authView==='register' ? 'login' : 'register';
+    state.authError = '';
+    showAuthGate();
+  });
+  $('#authEmail', host)?.addEventListener('input', (e)=>{ state.authEmailDraft = e.target.value; });
+  $('#authSubmitBtn', host)?.addEventListener('click', submitAuthForm);
+  $('#authForgotBtn', host)?.addEventListener('click', doForgotPassword);
+}
+
+function authErrorMessage(e){
+  const code = e && e.code;
+  const MAP = {
+    'auth/invalid-email': 'Ese correo no parece válido.',
+    'auth/email-already-in-use': 'Ya existe una cuenta con ese correo; prueba a iniciar sesión.',
+    'auth/weak-password': 'La contraseña debe tener al menos 6 caracteres.',
+    'auth/user-not-found': 'No hay ninguna cuenta con ese correo.',
+    'auth/wrong-password': 'La contraseña no es correcta.',
+    'auth/invalid-credential': 'El correo o la contraseña no son correctos.',
+    'auth/too-many-requests': 'Demasiados intentos seguidos; espera un momento y vuelve a intentarlo.',
+    'auth/network-request-failed': 'No hay conexión; comprueba tu red e inténtalo de nuevo.',
+  };
+  return MAP[code] || 'No se ha podido completar la operación. Inténtalo de nuevo.';
+}
+
+async function submitAuthForm(){
+  if(!state.fb) return;
+  const host = $('#authGate');
+  const email = ($('#authEmail', host)?.value||'').trim();
+  const password = $('#authPassword', host)?.value||'';
+  const isRegister = state.authView === 'register';
+  state.authEmailDraft = email;
+  if(!email || !password){ state.authError = 'Escribe tu correo y tu contraseña.'; showAuthGate(); return; }
+  if(isRegister){
+    const password2 = $('#authPassword2', host)?.value||'';
+    if(password.length < 6){ state.authError = 'La contraseña debe tener al menos 6 caracteres.'; showAuthGate(); return; }
+    if(password !== password2){ state.authError = 'Las contraseñas no coinciden.'; showAuthGate(); return; }
+  }
+  const btn = $('#authSubmitBtn', host);
+  if(btn){ btn.disabled = true; btn.textContent = 'Un momento…'; }
+  try{
+    if(isRegister){
+      await state.fb.createUserWithEmailAndPassword(state.fb.auth, email, password);
+    } else {
+      await state.fb.signInWithEmailAndPassword(state.fb.auth, email, password);
+    }
+    state.authError = '';
+    // onAuthStateChanged se encarga de mostrar la app al confirmarse el acceso.
+  }catch(e){
+    console.warn('auth error', e);
+    state.authError = authErrorMessage(e);
+    showAuthGate();
+  }
+}
+
+async function doForgotPassword(){
+  if(!state.fb) return;
+  const host = $('#authGate');
+  const email = ($('#authEmail', host)?.value||'').trim();
+  if(!email){ state.authError = 'Escribe primero tu correo para poder enviarte el enlace.'; showAuthGate(); return; }
+  try{
+    await state.fb.sendPasswordResetEmail(state.fb.auth, email);
+    state.authError = '';
+    showAuthGate();
+    toast('Te hemos enviado un correo para restablecer tu contraseña');
+  }catch(e){
+    console.warn('forgot password error', e);
+    state.authError = authErrorMessage(e);
+    showAuthGate();
+  }
+}
+
+function wireLogoutButton(){
+  $('#logoutBtn')?.addEventListener('click', async ()=>{
+    if(!state.fb) return;
+    try{ await state.fb.signOut(state.fb.auth); }catch(e){ console.warn('signOut error', e); }
+  });
+}
+
+async function handleAuthChange(user){
+  unsubscribeAll();
+  state.user = user;
+  if(user){
+    state.db = makeFirestoreDb(state.fb, user.uid);
+    showApp();
+    renderMain();
+    subscribeCollections();
+  } else {
+    state.db = null;
+    resetHouseholdData();
+    state.authError = '';
+    showAuthGate();
+  }
+}
+
+function subscribeCollections(){
+  if(!state.db) return;
+  try{
+    const unsub = state.db.collection('recipes').onSnapshot(snap=>{
+      state.recipes = snap.docs.map(d=>({id:d.id, ...d.data()}));
+      if(state.tab==='recetas') renderMain();
+    }, e=>{ console.warn('recipes sub error', e); });
+    if(unsub) state._unsubs.push(unsub);
+  }catch(e){}
+  try{
+    const unsub = state.db.collection('family').onSnapshot(snap=>{
+      state.family = snap.docs.map(d=>({id:d.id, ...d.data()}));
+      if(state.tab==='familia') renderMain();
+    }, e=>{ console.warn('family sub error', e); });
+    if(unsub) state._unsubs.push(unsub);
+  }catch(e){}
+  try{
+    const unsub = state.db.collection('shopping').onSnapshot(snap=>{
+      state.shoppingList = snap.docs.map(d=>({id:d.id, ...d.data()}));
+      if(state.tab==='compra') renderMain();
+    }, e=>{ console.warn('shopping sub error', e); });
+    if(unsub) state._unsubs.push(unsub);
+  }catch(e){}
+}
+
+async function getAttendance(dateISO){
+  if(state.attendanceCache[dateISO] !== undefined) return state.attendanceCache[dateISO];
+  return getAttendanceFresh(dateISO);
+}
+
+async function getAttendanceFresh(dateISO){
+  if(!state.db){ const empty={away:[]}; state.attendanceCache[dateISO]=empty; return empty; }
+  try{
+    const snap = await state.db.doc('attendance/'+dateISO).get();
+    const data = snap.exists ? snap.data() : {away:[]};
+    state.attendanceCache[dateISO] = data;
+    return data;
+  }catch(e){ return {away:[]}; }
+}
+
+async function setAttendance(dateISO, away, quiet){
+  state.attendanceCache[dateISO] = {date:dateISO, away};
+  if(!state.db){ toast('No hay conexión con la base de datos, así que no he podido guardar este día.'); return; }
+  try{
+    await state.db.doc('attendance/'+dateISO).set({date:dateISO, away});
+    if(!quiet) toast('Día actualizado');
+  }catch(e){ toast('No he podido guardar este día'); }
+}
+
+/* ---------------------------------------------------------------------
+   Rendering shell
+--------------------------------------------------------------------- */
+const TOPBAR = {
+  recetas: {t:'Recetas', s:'Dicta un plato y yo lo ordeno en ingredientes, pasos y tiempo estimado'},
+  plan: {t:'Planificación', s:'Un menú semanal o mensual pensado para tu familia'},
+  compra: {t:'Compra', s:'Escribe o dicta lo que necesitas y lo ordeno por categorías'},
+  familia: {t:'Familia', s:'Quién come en casa y cuándo va a faltar alguien'},
+  apariencia: {t:'Apariencia', s:'Cómo se ve la aplicación'},
+};
+
+function setTab(tab){
+  state.tab = tab;
+  $all('nav.tabbar button').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+  $('#topbarTitle').textContent = TOPBAR[tab].t;
+  $('#topbarSubtitle').textContent = TOPBAR[tab].s;
+  renderMain();
+}
+$all('nav.tabbar button').forEach(b=> b.addEventListener('click', ()=>setTab(b.dataset.tab)) );
+
+function renderMain(){
+  const main = $('#main');
+  if(state.tab==='recetas') main.innerHTML = renderRecetas();
+  else if(state.tab==='plan') main.innerHTML = renderPlan();
+  else if(state.tab==='compra') main.innerHTML = renderCompra();
+  else if(state.tab==='familia') main.innerHTML = renderFamilia();
+  else main.innerHTML = renderApariencia();
+  wireCurrentTab();
+}
+
+/* =======================================================================
+   TAB: RECETAS
+======================================================================= */
+function activeFilterCount(){
+  const f = state.recipeFilter;
+  return ['mealType','season','temp','role'].filter(k=>f[k]).length;
+}
+
+function renderRecetas(){
+  const f = state.recipeFilter;
+  const filtered = state.recipes.filter(r=>{
+    if(f.mealType && !(r.mealTypes||[]).includes(f.mealType)) return false;
+    if(f.season && r.season!==f.season && r.season!=='todo_el_año') return false;
+    if(f.temp && r.temp!==f.temp && r.temp!=='ambas') return false;
+    if(f.role && r.role!==f.role) return false;
+    if(f.q){
+      const q = f.q.toLowerCase();
+      if(!(r.name||'').toLowerCase().includes(q)) return false;
+    }
+    return true;
+  }).sort((a,b)=> (a.name||'').localeCompare(b.name||'', 'es'));
+
+  const count = activeFilterCount();
+  const emptyMsg = state.recipes.length
+    ? 'No hay ninguna receta que encaje con estos filtros; prueba a cambiarlos o a borrar la búsqueda.'
+    : 'Todavía no has añadido ninguna receta. Toca el botón + de aquí abajo y cuéntame el plato tal y como se lo explicarías a alguien: qué lleva y cómo se prepara. Yo me encargo de dejarlo bien organizado. Si prefieres empezar más rápido, también puedes añadir unas cuantas recetas de ejemplo.';
+
+  const list = filtered.length ? filtered.map(recipeCardHTML).join('') : `
+    <div class="empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M4 3v18M4 3c3 0 3 2 3 4s0 4-3 4M20 3v18M20 3c-4 0-6 3-6 7s2 5 2 5"/></svg>
+      <p>${emptyMsg}</p>
+      ${!state.recipes.length ? '<button class="btn btn-ghost btn-sm" id="seedBtnEmpty" style="margin-top:10px">Añadir recetas de ejemplo</button>' : ''}
+    </div>`;
+
+  return `
+    <div class="stack">
+      <div class="filter-bar">
+        <input type="text" id="recipeSearch" placeholder="Buscar receta…" value="${esc(f.q)}" style="flex:1">
+        ${state.sample ? `
+        <button class="filter-btn" id="openRecipeSearchBtn" aria-label="Descubrir recetas con IA">
+          <svg viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.5 6.5l2 2M15.5 15.5l2 2M17.5 6.5l-2 2M8.5 15.5l-2 2"/></svg>
+          Ideas
+        </button>` : ''}
+        <button class="filter-btn" id="openFiltersBtn">
+          <svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+          Filtros
+          ${count? `<span class="fcount">${count}</span>` : ''}
+        </button>
+      </div>
+      <div class="stack" id="recipeList">${list}</div>
+    </div>
+    <button class="fab" id="addRecipeFab" aria-label="Nueva receta">+</button>
+  `;
+}
+
+function filterSheetHTML(){
+  function group(label, options, key){
+    const chips = options.map(o=>`<button type="button" class="chip ${state.recipeFilter[key]===o.id?'on':''}" data-filterchip="${key}" data-filterval="${o.id}">${esc(o.label)}</button>`).join('');
+    return `<div class="filter-group"><label class="field-label">${label}</label><div class="row wrap center" style="gap:8px">${chips}</div></div>`;
+  }
+  return `
+    <div class="sheet-handle"></div>
+    <h2>Filtrar recetas</h2>
+    <div class="stack" style="gap:4px">
+      ${group('Tipo de comida', MEAL_TYPES, 'mealType')}
+      ${group('Temporada', SEASONS, 'season')}
+      ${group('Se sirve', [{id:'caliente',label:'Caliente'},{id:'fria',label:'Fría'},{id:'ambas',label:'Ambas'}], 'temp')}
+      ${group('Función en el menú', ROLES, 'role')}
+    </div>
+    <div class="row" style="gap:10px;margin-top:20px">
+      <button class="btn btn-ghost" id="clearFiltersBtn">Quitar filtros</button>
+      <button class="btn btn-primary btn-block" id="applyFiltersBtn">Ver recetas</button>
+    </div>
+  `;
+}
+
+function recipeCardHTML(r){
+  const badges = [
+    r.temp ? `<span class="badge">${r.temp==='fria'?'Fría':(r.temp==='caliente'?'Caliente':'Fría/caliente')}</span>` : '',
+    r.season && r.season!=='todo_el_año' ? `<span class="badge">${esc(SEASONS.find(s=>s.id===r.season)?.label||r.season)}</span>` : '',
+    (r.mealTypes||[]).map(mt=>`<span class="badge">${esc(MEAL_TYPES.find(m=>m.id===mt)?.label||mt)}</span>`).join(''),
+  ].join('');
+  return `
+    <div class="card recipe-card row" data-recipeid="${r.id}">
+      <div class="food-icon-wrap">${foodIconBadge(r.foodType, 42)}${provenanceBadgeHTML(r, 18)}</div>
+      <div style="flex:1;min-width:0">
+        <h3>${esc(r.name||'Sin nombre')}</h3>
+        <div class="meta">${r.timeMinutes?`${r.timeMinutes} min · `:''}${r.servings?`${r.servings} raciones`:''}</div>
+        <div class="row wrap" style="gap:5px;margin-top:6px">${badges}</div>
+      </div>
+    </div>`;
+}
+
+function wireRecetasEvents(){
+  const fab = $('#addRecipeFab');
+  if(fab) fab.addEventListener('click', ()=> openRecipeSheet(null) );
+  const search = $('#recipeSearch');
+  if(search) search.addEventListener('input', e=>{ state.recipeFilter.q = e.target.value; renderMain(); const s=$('#recipeSearch'); if(s){s.focus(); s.setSelectionRange(s.value.length,s.value.length);} });
+  $all('[data-recipeid]').forEach(c=> c.addEventListener('click', ()=> openRecipeSheet(c.dataset.recipeid)) );
+  const openFilters = $('#openFiltersBtn');
+  if(openFilters) openFilters.addEventListener('click', openFilterSheet);
+  const searchBtn = $('#openRecipeSearchBtn');
+  if(searchBtn) searchBtn.addEventListener('click', openRecipeSearchSheet);
+  const seedBtn = $('#seedBtnEmpty');
+  if(seedBtn) seedBtn.addEventListener('click', doSeedRecipes);
+}
+
+function openFilterSheet(){
+  openSheet(filterSheetHTML(), ()=>{
+    $all('[data-filterchip]').forEach(b=> b.addEventListener('click', ()=>{
+      const key = b.dataset.filterchip, val = b.dataset.filterval;
+      state.recipeFilter[key] = state.recipeFilter[key]===val ? null : val;
+      closeSheet(); openFilterSheet();
+    }));
+    $('#clearFiltersBtn').addEventListener('click', ()=>{
+      state.recipeFilter.mealType = null; state.recipeFilter.season = null;
+      state.recipeFilter.temp = null; state.recipeFilter.role = null;
+      closeSheet(); renderMain();
+    });
+    $('#applyFiltersBtn').addEventListener('click', ()=>{ closeSheet(); renderMain(); });
+  });
+}
+
+/* ---- Recipe capture / edit sheet ---- */
+function cancelSpeech(){
+  try{ if('speechSynthesis' in window) speechSynthesis.cancel(); }catch(e){}
+}
+function openSheet(html, onMount){
+  cancelSpeech(); // cerrar cualquier lectura en voz alta antes de abrir otra hoja
+  const host = $('#sheetHost');
+  host.innerHTML = `<div class="sheet-backdrop" id="sheetBackdrop"><div class="sheet">${html}</div></div>`;
+  $('#sheetBackdrop').addEventListener('click', e=>{ if(e.target.id==='sheetBackdrop') closeSheet(); });
+  if(onMount) onMount(host);
+}
+function closeSheet(){ cancelSpeech(); $('#sheetHost').innerHTML=''; }
+
+/* Flecha para volver atrás sin guardar, usada en las cabeceras de hoja. */
+const BACK_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>`;
+function sheetTopbarHTML(title){
+  return `<div class="sheet-topbar"><button type="button" class="sheet-back" id="sheetBackBtn" aria-label="Volver">${BACK_ICON}</button><h2>${esc(title)}</h2></div>`;
+}
+function wireSheetBack(){
+  $('#sheetBackBtn')?.addEventListener('click', closeSheet);
+}
+
+function blankRecipe(){
+  return {
+    name:'', timeMinutes:null, servings:4,
+    ingredients:[{name:'',amount:'',unit:''}],
+    steps:[''],
+    mealTypes:[], temp:'ambas', season:'todo_el_año', role:'plato_principal',
+    plate:{veg:0,protein:0,carbs:0},
+    foodType:'otro', mainIngredientDetail:'', weight:'contundente',
+    cookStyle:'otro',
+    meatType:'', fishType:'',
+    rawDictation:'',
+    source:'usuario',
+  };
+}
+
+/* Recetas de ejemplo, para que la planificación tenga algo con lo que
+   empezar a trabajar desde el primer día. Son platos caseros conocidos,
+   con un reparto del plato aproximado según el método de Harvard. */
+const STARTER_RECIPES = [
+  { name:'Lentejas estofadas con verduras', timeMinutes:55, servings:4,
+    ingredients:[{name:'lentejas',amount:'300',unit:'gramos'},{name:'zanahoria',amount:'2',unit:''},{name:'cebolla',amount:'1',unit:''},{name:'pimiento verde',amount:'1',unit:''},{name:'tomate triturado',amount:'200',unit:'gramos'},{name:'ajo',amount:'2',unit:'dientes'},{name:'aceite de oliva',amount:'2',unit:'cucharadas'},{name:'laurel',amount:'1',unit:'hoja'},{name:'pimentón',amount:'1',unit:'cucharadita'},{name:'sal',amount:'al gusto',unit:''}],
+    steps:['Picar la cebolla, el pimiento, la zanahoria y el ajo en trozos pequeños.','Sofreír la verdura en aceite de oliva hasta que esté blanda, unos 10 minutos.','Añadir el pimentón, remover un momento y agregar el tomate triturado.','Incorporar las lentejas, el laurel y cubrir con agua.','Cocer a fuego medio unos 35-40 minutos, hasta que las lentejas estén tiernas.','Rectificar de sal y dejar reposar unos minutos antes de servir.'],
+    mealTypes:['comida'], temp:'caliente', season:'invierno', role:'plato_principal', plate:{veg:50,protein:25,carbs:25},
+    foodType:'legumbre', mainIngredientDetail:'lentejas', weight:'contundente', cookStyle:'estofado' },
+
+  { name:'Pisto con huevo escalfado', timeMinutes:40, servings:4,
+    ingredients:[{name:'calabacín',amount:'2',unit:''},{name:'berenjena',amount:'1',unit:''},{name:'pimiento rojo',amount:'1',unit:''},{name:'pimiento verde',amount:'1',unit:''},{name:'cebolla',amount:'1',unit:''},{name:'tomate maduro',amount:'3',unit:''},{name:'huevo',amount:'4',unit:''},{name:'aceite de oliva',amount:'3',unit:'cucharadas'},{name:'sal',amount:'al gusto',unit:''}],
+    steps:['Cortar todas las verduras en dados pequeños.','Pochar la cebolla y los pimientos en aceite de oliva a fuego suave.','Añadir el calabacín y la berenjena y cocinar unos 10 minutos más.','Incorporar el tomate troceado y dejar cocer a fuego lento hasta que quede meloso, unos 15-20 minutos.','Escalfar los huevos aparte y servirlos sobre el pisto.'],
+    mealTypes:['comida','cena'], temp:'caliente', season:'verano', role:'plato_principal', plate:{veg:65,protein:20,carbs:15},
+    foodType:'verdura', mainIngredientDetail:'pisto de verduras', weight:'ligero', cookStyle:'guiso' },
+
+  { name:'Ensalada de garbanzos con atún', timeMinutes:20, servings:4,
+    ingredients:[{name:'garbanzos cocidos',amount:'400',unit:'gramos'},{name:'atún al natural',amount:'2',unit:'latas'},{name:'tomate',amount:'2',unit:''},{name:'pepino',amount:'1',unit:''},{name:'cebolla morada',amount:'0.5',unit:''},{name:'aceitunas',amount:'un puñado',unit:''},{name:'aceite de oliva',amount:'2',unit:'cucharadas'},{name:'vinagre',amount:'1',unit:'cucharada'},{name:'sal',amount:'al gusto',unit:''}],
+    steps:['Escurrir bien los garbanzos y el atún.','Cortar el tomate, el pepino y la cebolla en trozos pequeños.','Mezclar todos los ingredientes en un bol grande.','Aliñar con aceite, vinagre y sal justo antes de servir.'],
+    mealTypes:['almuerzo','comida'], temp:'fria', season:'verano', role:'plato_principal', plate:{veg:50,protein:30,carbs:20},
+    foodType:'legumbre', mainIngredientDetail:'garbanzos', weight:'ligero', cookStyle:'ensalada' },
+
+  { name:'Pollo al horno con patatas y pimientos', timeMinutes:65, servings:4,
+    ingredients:[{name:'muslos de pollo',amount:'4',unit:''},{name:'patata',amount:'4',unit:''},{name:'pimiento rojo',amount:'2',unit:''},{name:'cebolla',amount:'1',unit:''},{name:'ajo',amount:'3',unit:'dientes'},{name:'aceite de oliva',amount:'3',unit:'cucharadas'},{name:'romero',amount:'1',unit:'ramita'},{name:'sal',amount:'al gusto',unit:''}],
+    steps:['Precalentar el horno a 200 grados.','Cortar las patatas y los pimientos en trozos grandes y la cebolla en tiras.','Colocar todo en una bandeja con el pollo, el ajo y el romero.','Regar con aceite de oliva y salar.','Hornear unos 45-50 minutos, dando la vuelta a mitad de cocción, hasta que el pollo esté dorado.'],
+    mealTypes:['comida','cena'], temp:'caliente', season:'todo_el_año', role:'plato_principal', plate:{veg:40,protein:35,carbs:25},
+    foodType:'carne', mainIngredientDetail:'pollo', weight:'contundente', meatType:'blanca', cookStyle:'horno' },
+
+  { name:'Crema de calabacín', timeMinutes:30, servings:4,
+    ingredients:[{name:'calabacín',amount:'4',unit:''},{name:'puerro',amount:'1',unit:''},{name:'patata',amount:'1',unit:''},{name:'caldo de verduras',amount:'800',unit:'ml'},{name:'aceite de oliva',amount:'1',unit:'cucharada'},{name:'queso fresco',amount:'2',unit:'cucharadas (opcional)'},{name:'sal',amount:'al gusto',unit:''}],
+    steps:['Trocear el calabacín, el puerro y la patata.','Rehogar el puerro en el aceite unos minutos.','Añadir el calabacín, la patata y el caldo, y cocer 20 minutos.','Triturar hasta que quede una crema fina y rectificar de sal.','Servir tibia o fría, con un poco de queso fresco por encima si se quiere.'],
+    mealTypes:['cena','comida'], temp:'ambas', season:'todo_el_año', role:'plato_principal', plate:{veg:70,protein:10,carbs:20},
+    foodType:'verdura', mainIngredientDetail:'calabacín', weight:'ligero', cookStyle:'crema' },
+
+  { name:'Salmón al horno con ensalada verde', timeMinutes:25, servings:4,
+    ingredients:[{name:'lomos de salmón',amount:'4',unit:''},{name:'limón',amount:'1',unit:''},{name:'lechuga variada',amount:'1',unit:'bolsa'},{name:'tomate cherry',amount:'150',unit:'gramos'},{name:'aceite de oliva',amount:'2',unit:'cucharadas'},{name:'sal',amount:'al gusto',unit:''}],
+    steps:['Precalentar el horno a 200 grados.','Colocar el salmón en una bandeja, salar y rociar con el zumo de limón y un poco de aceite.','Hornear entre 12 y 15 minutos, según el grosor.','Mientras, preparar la ensalada con la lechuga y los tomates cherry.','Aliñar la ensalada y servir junto al salmón.'],
+    mealTypes:['comida','cena'], temp:'caliente', season:'todo_el_año', role:'plato_principal', plate:{veg:50,protein:35,carbs:15},
+    foodType:'pescado', mainIngredientDetail:'salmón', weight:'ligero', fishType:'azul', cookStyle:'horno' },
+
+  { name:'Tortilla de patatas con ensalada', timeMinutes:45, servings:4,
+    ingredients:[{name:'patata',amount:'5',unit:''},{name:'huevo',amount:'6',unit:''},{name:'cebolla',amount:'1',unit:''},{name:'aceite de oliva',amount:'150',unit:'ml (para freír)'},{name:'sal',amount:'al gusto',unit:''},{name:'lechuga y tomate',amount:'para acompañar',unit:''}],
+    steps:['Pelar y cortar las patatas en láminas finas, junto con la cebolla.','Freír a fuego suave en abundante aceite hasta que estén tiernas.','Escurrir bien el aceite y mezclar con los huevos batidos y una pizca de sal.','Cuajar la tortilla en una sartén por ambos lados, al gusto de cada uno.','Servir con una ensalada sencilla de lechuga y tomate.'],
+    mealTypes:['comida','cena'], temp:'ambas', season:'todo_el_año', role:'plato_principal', plate:{veg:35,protein:25,carbs:40},
+    foodType:'huevo', mainIngredientDetail:'huevo y patata', weight:'contundente', cookStyle:'otro' },
+
+  { name:'Gazpacho', timeMinutes:15, servings:4,
+    ingredients:[{name:'tomate maduro',amount:'1',unit:'kilo'},{name:'pepino',amount:'1',unit:''},{name:'pimiento verde',amount:'1',unit:''},{name:'ajo',amount:'1',unit:'diente'},{name:'aceite de oliva',amount:'4',unit:'cucharadas'},{name:'vinagre de vino',amount:'1',unit:'cucharada'},{name:'pan duro',amount:'un trozo pequeño (opcional)',unit:''},{name:'sal',amount:'al gusto',unit:''}],
+    steps:['Trocear todas las verduras.','Triturar junto con el aceite, el vinagre y la sal hasta que quede fino.','Colar si se prefiere una textura más suave.','Enfriar en la nevera al menos una hora antes de servir.'],
+    mealTypes:['almuerzo','cena'], temp:'fria', season:'verano', role:'plato_principal', plate:{veg:80,protein:5,carbs:15},
+    foodType:'verdura', mainIngredientDetail:'tomate', weight:'ligero', cookStyle:'otro' },
+
+  { name:'Porridge de avena con fruta', timeMinutes:10, servings:2,
+    ingredients:[{name:'copos de avena',amount:'80',unit:'gramos'},{name:'leche o bebida vegetal',amount:'400',unit:'ml'},{name:'plátano',amount:'1',unit:''},{name:'canela',amount:'una pizca',unit:''},{name:'miel',amount:'al gusto (opcional)',unit:''}],
+    steps:['Calentar la leche en un cazo a fuego medio.','Añadir los copos de avena y remover unos 5 minutos, hasta que espese.','Servir en un bol con el plátano en rodajas y una pizca de canela.'],
+    mealTypes:['desayuno'], temp:'caliente', season:'invierno', role:'desayuno_item', plate:{veg:0,protein:0,carbs:0},
+    foodType:'cereal', mainIngredientDetail:'avena', weight:'ligero', cookStyle:'otro' },
+
+  { name:'Yogur con fruta y frutos secos', timeMinutes:5, servings:1,
+    ingredients:[{name:'yogur natural',amount:'1',unit:''},{name:'fruta de temporada',amount:'1 pieza',unit:''},{name:'nueces o almendras',amount:'un puñado',unit:''},{name:'miel',amount:'al gusto (opcional)',unit:''}],
+    steps:['Cortar la fruta en trozos.','Mezclar con el yogur y añadir los frutos secos por encima.'],
+    mealTypes:['merienda','desayuno'], temp:'fria', season:'todo_el_año', role:'desayuno_item', plate:{veg:0,protein:0,carbs:0},
+    foodType:'lacteo', mainIngredientDetail:'yogur', weight:'ligero', cookStyle:'otro' },
+];
+
+async function doSeedRecipes(){
+  if(!state.db){ toast('No hay conexión con la base de datos, así que no puedo añadir las recetas de ejemplo.'); return; }
+  const btn = $('#seedBtnEmpty'); if(btn){ btn.disabled=true; btn.textContent='Añadiendo…'; }
+  try{
+    for(const r of STARTER_RECIPES){
+      await state.db.collection('recipes').add({...r, rawDictation:'', source:'claude', createdAt:Date.now(), updatedAt:Date.now()});
+    }
+    toast('He añadido unas cuantas recetas para empezar');
+  }catch(e){ console.warn(e); toast('No he podido añadir las recetas de ejemplo'); }
+}
+
+function openRecipeSheet(recipeId){
+  const existing = recipeId ? state.recipes.find(r=>r.id===recipeId) : null;
+  if(existing){
+    renderRecipeForm(JSON.parse(JSON.stringify(existing)), recipeId);
+    return;
+  }
+  // New recipe: start on the dictation step
+  const draft = { raw:'', preMealTypes:[], preTemp:'', preSeason:'', preTime:'' };
+  openSheet(dictationStepHTML(draft), ()=> wireDictationStep(draft));
+}
+
+function dictationStepHTML(draft){
+  const mealChips = MEAL_TYPES.map(m=>`<button type="button" class="chip ${draft.preMealTypes.includes(m.id)?'on':''}" data-premeal="${m.id}">${esc(m.label)}</button>`).join('');
+  return `
+    <div class="sheet-handle"></div>
+    ${sheetTopbarHTML('Nueva receta')}
+    <div class="stack tight">
+      <div>
+        <label class="field-label">Dicta o escribe la receta</label>
+        <textarea id="rawText" placeholder="Ej: Lentejas estofadas para 4 personas. Ingredientes: 300 gramos de lentejas, una zanahoria, media cebolla, un diente de ajo, un tomate, aceite de oliva, sal y un par de hojas de laurel. Se sofríe la verdura, se añaden las lentejas y se cubre con agua, se cuece cuarenta minutos...">${esc(draft.raw)}</textarea>
+        <p class="hint">Cuéntamelo como se lo explicarías a alguien en voz alta: qué ingredientes lleva, más o menos cuánta cantidad de cada uno, y los pasos que sigues para prepararlo. No hace falta que lo ordenes ni que cuides mucho las palabras, yo me encargo de darle forma.</p>
+      </div>
+      <div>
+        <label class="field-label">Tipo de comida (opcional, tú decides)</label>
+        <div class="row wrap center" style="gap:8px">${mealChips}</div>
+      </div>
+      <div class="row" style="gap:10px">
+        <div style="flex:1">
+          <label class="field-label">Se sirve</label>
+          <select id="preTemp"><option value="">— sin indicar —</option><option value="caliente">Caliente</option><option value="fria">Fría</option><option value="ambas">Ambas</option></select>
+        </div>
+        <div style="flex:1">
+          <label class="field-label">Tiempo (min)</label>
+          <input type="number" id="preTime" placeholder="lo estimo yo" min="0">
+        </div>
+      </div>
+      <div id="dictationAction"></div>
+    </div>
+  `;
+}
+
+function wireDictationStep(draft){
+  wireSheetBack();
+  $all('[data-premeal]').forEach(b=> b.addEventListener('click', ()=>{
+    const id=b.dataset.premeal;
+    const i = draft.preMealTypes.indexOf(id);
+    if(i>-1) draft.preMealTypes.splice(i,1); else draft.preMealTypes.push(id);
+    b.classList.toggle('on');
+  }));
+  const rawTextEl = $('#rawText');
+  const actionHost = $('#dictationAction');
+  function renderActions(thinking){
+    const canSample = !!state.sample;
+    actionHost.innerHTML = `
+      ${thinking ? `<div class="thinking"><span class="spinner"></span> Analizando la receta…</div>` : ''}
+      <div class="row" style="gap:10px">
+        ${canSample ? `<button class="btn btn-primary btn-block" id="analyzeBtn" ${thinking?'disabled':''}>Analizar con IA</button>` : ''}
+        <button class="btn ${canSample?'btn-ghost':'btn-primary'} btn-block" id="manualBtn" ${thinking?'disabled':''}>Rellenar a mano</button>
+      </div>
+    `;
+    const a = $('#analyzeBtn'); if(a) a.addEventListener('click', doAnalyze);
+    const m = $('#manualBtn'); if(m) m.addEventListener('click', ()=>{
+      const rec = blankRecipe();
+      rec.rawDictation = rawTextEl.value.trim();
+      rec.mealTypes = draft.preMealTypes.slice();
+      if($('#preTemp').value) rec.temp = $('#preTemp').value;
+      if($('#preTime').value) rec.timeMinutes = parseInt($('#preTime').value,10);
+      if(rawTextEl.value.trim()) rec.steps = [rawTextEl.value.trim()];
+      rec.foodType = guessFoodType(rec);
+      rec.cookStyle = guessCookStyle(rec);
+      renderRecipeForm(rec, null);
+    });
+  }
+  renderActions(false);
+
+  async function doAnalyze(){
+    const raw = rawTextEl.value.trim();
+    if(!raw){ toast('Dicta o escribe algo primero'); return; }
+    renderActions(true);
+    const prompt = `Eres un chef y nutricionista. A partir del siguiente texto dictado de viva voz por un usuario sobre una receta de cocina casera, extrae la información estructurada.
+
+Texto dictado:
+"""${raw}"""
+
+Devuelve SOLO un objeto JSON, sin ningún texto adicional ni explicación, con este formato exacto:
+{
+  "name": string,
+  "ingredients": [{"name": string, "amount": string, "unit": string}],
+  "steps": [string, ...],
+  "timeMinutes": number,
+  "servings": number,
+  "mealTypes": array con las que correspondan entre "desayuno","almuerzo","comida","cena","merienda",
+  "temp": "fria" | "caliente" | "ambas",
+  "season": "invierno" | "verano" | "entretiempo" | "todo_el_año",
+  "role": "plato_principal" | "guarnicion" | "postre" | "desayuno_item" | "bebida",
+  "plate": {"veg": number, "protein": number, "carbs": number},
+  "foodType": "carne" | "pescado" | "marisco" | "legumbre" | "proteina_vegetal" | "huevo" | "lacteo" | "cereal" | "verdura" | "fruta" | "otro",
+  "mainIngredientDetail": string,
+  "weight": "ligero" | "contundente",
+  "cookStyle": "estofado" | "ensalada" | "horno" | "plancha" | "guiso" | "pure" | "salteado" | "asado" | "wok" | "sopa" | "crema" | "frito" | "otro"
+}
+
+Reglas: "amount" es texto libre (ej. "2", "1/2", "al gusto"); "unit" vacío si no aplica. Los "steps" van en español, uno por elemento, en orden, en infinitivo o imperativo, sin numerarlos tú (yo los numero). "timeMinutes" es el tiempo total estimado (preparación + cocción) en minutos. "servings" son las raciones; estima 4 si no se menciona. Si role es "plato_principal", estima el reparto aproximado en porcentaje del plato según el método del plato de Harvard (mitad verduras y frutas, un cuarto proteínas, un cuarto cereales integrales o hidratos de carbono) y procura favorecer una buena proporción de verduras; si no es plato principal, usa 0 en veg, protein y carbs. "foodType" es la categoría del ingrediente protagonista del plato (elige la que mejor encaje, "otro" si no encaja en ninguna). "mainIngredientDetail" es ese ingrediente concreto en una o dos palabras (ej. "lentejas", "pollo", "caballa", "calabacín"). "weight" indica si el plato es ligero o contundente: usa "contundente" para guisos, platos de cuchara, arroces o carnes copiosas, y "ligero" para ensaladas, cremas, platos fríos o pescados suaves. "cookStyle" es el estilo de cocción predominante del plato (elige el que mejor encaje, "otro" si no encaja en ninguno). Si el usuario ya dijo explícitamente el tiempo, las raciones, si se sirve fría o caliente, la temporada o el tipo de comida, respeta exactamente lo que dijo en vez de estimarlo. Datos ya indicados por el usuario: tipo de comida=${draft.preMealTypes.join(',')||'sin indicar'}; se sirve=${$('#preTemp').value||'sin indicar'}; tiempo en minutos=${$('#preTime').value||'sin indicar'}.`;
+    try{
+      const data = await state.sample.json(prompt, {modelTier:'default'});
+      const rec = blankRecipe();
+      rec.name = String(data.name||'').trim();
+      rec.ingredients = Array.isArray(data.ingredients) && data.ingredients.length ? data.ingredients.map(i=>({name:String(i.name||''), amount:String(i.amount||''), unit:String(i.unit||'')})) : blankRecipe().ingredients;
+      rec.steps = Array.isArray(data.steps) && data.steps.length ? data.steps.map(String) : [''];
+      rec.timeMinutes = draft.preTime ? parseInt(draft.preTime,10) : (Number.isFinite(data.timeMinutes)? Math.round(data.timeMinutes): null);
+      rec.servings = Number.isFinite(data.servings) ? Math.round(data.servings) : 4;
+      rec.mealTypes = draft.preMealTypes.length ? draft.preMealTypes.slice() : (Array.isArray(data.mealTypes)? data.mealTypes.filter(m=>MEAL_TYPES.some(x=>x.id===m)) : []);
+      rec.temp = $('#preTemp').value || (['fria','caliente','ambas'].includes(data.temp)? data.temp : 'ambas');
+      rec.season = ['invierno','verano','entretiempo','todo_el_año'].includes(data.season) ? data.season : 'todo_el_año';
+      rec.role = ROLES.some(x=>x.id===data.role) ? data.role : 'plato_principal';
+      rec.plate = {
+        veg: Number.isFinite(data.plate?.veg)? Math.round(data.plate.veg):0,
+        protein: Number.isFinite(data.plate?.protein)? Math.round(data.plate.protein):0,
+        carbs: Number.isFinite(data.plate?.carbs)? Math.round(data.plate.carbs):0,
+      };
+      rec.foodType = FOOD_TYPES.some(x=>x.id===data.foodType) ? data.foodType : 'otro';
+      rec.mainIngredientDetail = String(data.mainIngredientDetail||'').trim();
+      rec.weight = data.weight==='ligero' ? 'ligero' : 'contundente';
+      rec.cookStyle = COOK_STYLES.some(x=>x.id===data.cookStyle) ? data.cookStyle : guessCookStyle(rec);
+      rec.rawDictation = raw;
+      renderRecipeForm(rec, null);
+      toast('Receta analizada — revisa y ajusta lo que quieras');
+    }catch(e){
+      console.warn('sample error', e);
+      const msgs = {
+        not_granted:'No se ha autorizado usar el análisis con IA en esta vista.',
+        rate_limited:'Demasiadas peticiones seguidas, prueba de nuevo en un momento.',
+        invalid_json:'No he podido interpretar bien el dictado. Prueba a rellenar a mano o inténtalo de nuevo.',
+        images_unavailable:'', tools_unavailable:'',
+      };
+      toast(msgs[e.code] || 'No se pudo analizar la receta. Puedes rellenarla a mano.');
+      renderActions(false);
+    }
+  }
+}
+
+function renderRecipeForm(rec, existingId, activeTab){
+  openSheet('', ()=>{});
+  const sheet = $('.sheet');
+  sheet.innerHTML = recipeFormHTML(rec, existingId, activeTab);
+  wireRecipeForm(rec, existingId, activeTab);
+}
+
+const TTS_ICON = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M16.3 8.5a5 5 0 0 1 0 7M18.8 6a8.3 8.3 0 0 1 0 12"/></svg>`;
+const STOP_ICON = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>`;
+const SHARE_ICON = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M12 4l-3.5 3.5M12 4l3.5 3.5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>`;
+
+/* ---- "Compartir · PDF": generador de PDF real, escrito desde cero ----
+   No usa librerías externas (no se pueden cargar en un Artifact) ni
+   window.print()/window.open() (no funcionan en este entorno). Construye
+   los bytes de un PDF válido a mano (fuente Helvetica + WinAnsiEncoding,
+   con justificación por espaciado de palabras) y lo descarga como archivo
+   real mediante un Blob y un <a download>. */
+const PDF_HELV_WIDTHS = {
+  ' ':278,'!':278,'"':355,'#':556,'$':556,'%':889,'&':667,"'":191,'(':333,')':333,'*':389,'+':584,',':278,'-':333,'.':278,'/':278,
+  '0':556,'1':556,'2':556,'3':556,'4':556,'5':556,'6':556,'7':556,'8':556,'9':556,':':278,';':278,'<':584,'=':584,'>':584,'?':556,'@':1015,
+  'A':667,'B':667,'C':722,'D':722,'E':667,'F':611,'G':778,'H':722,'I':278,'J':500,'K':667,'L':556,'M':833,'N':722,'O':778,'P':667,'Q':778,'R':722,'S':667,'T':611,'U':722,'V':667,'W':944,'X':667,'Y':667,'Z':611,
+  '[':278,'\\':278,']':278,'^':469,'_':556,'`':333,
+  'a':556,'b':556,'c':500,'d':556,'e':556,'f':278,'g':556,'h':556,'i':222,'j':222,'k':500,'l':222,'m':833,'n':556,'o':556,'p':556,'q':556,'r':333,'s':500,'t':278,'u':556,'v':500,'w':722,'x':500,'y':500,'z':500,
+  '{':334,'|':260,'}':334,'~':584,
+  'á':556,'é':556,'í':222,'ó':556,'ú':556,'ñ':556,'Á':667,'É':667,'Í':278,'Ó':778,'Ú':722,'Ñ':722,'ü':556,'Ü':722,'¿':556,'¡':333,
+};
+function pdfCharWidth(ch){ return (PDF_HELV_WIDTHS[ch]||556); }
+function pdfTextWidth(str, size){
+  let w=0; for(const ch of str) w += pdfCharWidth(ch);
+  return w/1000*size;
+}
+function pdfEscape(s){
+  return s.replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)');
+}
+// Convierte a Latin-1/WinAnsi (un byte por carácter). Los caracteres fuera
+// de ese rango (no deberían aparecer en nuestras recetas en español) caen
+// a '?' en vez de romper la generación.
+function pdfToWinAnsi(s){
+  let out = '';
+  for(const ch of s){
+    const code = ch.codePointAt(0);
+    out += String.fromCharCode(code < 256 ? code : 63);
+  }
+  return out;
+}
+function pdfWrapParagraph(text, size, maxWidth){
+  const words = text.split(/\s+/).filter(Boolean);
+  const lines = [];
+  let cur = [], curWidth = 0;
+  const spaceW = pdfTextWidth(' ', size);
+  for(const w of words){
+    const ww = pdfTextWidth(w, size);
+    const addWidth = cur.length ? spaceW + ww : ww;
+    if(cur.length && curWidth + addWidth > maxWidth){
+      lines.push(cur); cur = [w]; curWidth = ww;
+    } else { cur.push(w); curWidth += addWidth; }
+  }
+  if(cur.length) lines.push(cur);
+  return lines.map((words,i)=>({ words, isLast: i===lines.length-1 }));
+}
+class PDFDoc {
+  constructor(){
+    this.objects = [];
+    this.pageW = 595.28; this.pageH = 841.89; // A4 en puntos
+    this.margin = 56;
+    this.font = 'F1';
+    this.curContent = [];
+    this.pageContentNums = [];
+    this.y = this.pageH - this.margin;
+    this._nextNum = 0;
+  }
+  _alloc(){ this._nextNum += 1; return this._nextNum; }
+  _flushContent(){
+    const num = this._alloc();
+    const stream = this.curContent.join('\n');
+    this.objects.push({num, isStream:true, dict:`<< /Length ${stream.length} >>`, stream});
+    return num;
+  }
+  ensureSpace(lineHeight){
+    if(this.y - lineHeight < this.margin){
+      this.pageContentNums.push(this._flushContent());
+      this.curContent = [];
+      this.y = this.pageH - this.margin;
+    }
+  }
+  drawLine(text, size, opts){
+    opts = opts || {};
+    this.ensureSpace(opts.lineHeight || size*1.35);
+    const x = this.margin;
+    const esc2 = pdfEscape(pdfToWinAnsi(text));
+    let ops = 'BT\n';
+    ops += `/${this.font} ${size} Tf\n`;
+    if(opts.tw != null) ops += `${opts.tw.toFixed(3)} Tw\n`;
+    ops += `${x} ${this.y.toFixed(2)} Td\n`;
+    ops += `(${esc2}) Tj\nET`;
+    this.curContent.push(ops);
+    this.y -= (opts.lineHeight || size*1.35);
+  }
+  spacer(h){ this.ensureSpace(h); this.y -= h; }
+  heading(text, size){
+    this.ensureSpace(size*1.6);
+    this.drawLine(text, size, {lineHeight:size*1.5});
+  }
+  paragraph(text, size, opts){
+    opts = opts || {};
+    const maxWidth = this.pageW - this.margin*2;
+    const lineHeight = size*1.45;
+    const lines = pdfWrapParagraph(text, size, maxWidth);
+    for(const line of lines){
+      const words = line.words;
+      const raw = words.join(' ');
+      let tw = null;
+      if(opts.justify && !line.isLast && words.length > 1){
+        const naturalWidth = pdfTextWidth(raw, size);
+        const deficit = maxWidth - naturalWidth;
+        const spaceCount = words.length - 1;
+        tw = deficit / spaceCount;
+      }
+      this.drawLine(raw, size, {lineHeight, tw});
+    }
+  }
+  finish(){
+    if(this.curContent.length || this.pageContentNums.length === 0){
+      this.pageContentNums.push(this._flushContent());
+    }
+    const fontNum = this._alloc();
+    this.objects.push({num: fontNum, dict: `<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>`});
+    const pageNums = [];
+    for(const contentNum of this.pageContentNums){
+      const pnum = this._alloc();
+      pageNums.push(pnum);
+      this.objects.push({num: pnum, dict:
+        `<< /Type /Page /Parent PAGES_REF /MediaBox [0 0 ${this.pageW} ${this.pageH}] /Resources << /Font << /${this.font} ${fontNum} 0 R >> >> /Contents ${contentNum} 0 R >>`
+      });
+    }
+    const pagesNum = this._alloc();
+    this.objects.forEach(o=>{ if(typeof o.dict==='string') o.dict = o.dict.replace('PAGES_REF', pagesNum+' 0 R'); });
+    this.objects.push({num: pagesNum, dict: `<< /Type /Pages /Kids [${pageNums.map(n=>n+' 0 R').join(' ')}] /Count ${pageNums.length} >>`});
+    const catalogNum = this._alloc();
+    this.objects.push({num: catalogNum, dict: `<< /Type /Catalog /Pages ${pagesNum} 0 R >>`});
+    this.objects.sort((a,b)=>a.num-b.num);
+    let out = '%PDF-1.4\n%\xE2\xE3\xCF\xD3\n';
+    const offsets = {};
+    for(const o of this.objects){
+      offsets[o.num] = out.length;
+      if(o.isStream){
+        out += `${o.num} 0 obj\n${o.dict}\nstream\n${o.stream}\nendstream\nendobj\n`;
+      } else {
+        out += `${o.num} 0 obj\n${o.dict}\nendobj\n`;
+      }
+    }
+    const xrefStart = out.length;
+    const maxNum = this._nextNum;
+    out += `xref\n0 ${maxNum+1}\n`;
+    out += `0000000000 65535 f \n`;
+    for(let i=1;i<=maxNum;i++){
+      const off = offsets[i];
+      out += off==null ? `0000000000 00000 f \n` : `${String(off).padStart(10,'0')} 00000 n \n`;
+    }
+    out += `trailer\n<< /Size ${maxNum+1} /Root ${catalogNum} 0 R >>\nstartxref\n${xrefStart}\n%%EOF`;
+    return out; // string binaria Latin-1 — cada código de carácter < 256
+  }
+}
+function pdfStringToBlob(binStr){
+  const bytes = new Uint8Array(binStr.length);
+  for(let i=0;i<binStr.length;i++) bytes[i] = binStr.charCodeAt(i) & 0xFF;
+  return new Blob([bytes], {type:'application/pdf'});
+}
+let _downloadsCapPromise = null;
+function getDownloadsCap(){
+  if(!_downloadsCapPromise){
+    _downloadsCapPromise = (async()=>{
+      try{
+        if(window.claude && typeof window.claude.use === 'function'){
+          return await window.claude.use('downloads');
+        }
+      }catch(e){ console.warn('downloads capability error', e); }
+      return null;
+    })();
+  }
+  return _downloadsCapPromise;
+}
+// Ofrece un archivo (blob) al usuario para guardarlo. Usa la capacidad
+// "downloads" de Claude (la única vía que realmente funciona dentro del
+// visor de artefactos); si no está disponible, recurre al truco clásico
+// de enlace <a download> por si la página se abre fuera del visor.
+async function offerBlobDownload(blob, filename){
+  const downloads = await getDownloadsCap();
+  if(downloads){
+    const res = await downloads.save({filename, data: blob});
+    return res && res.status === 'delivered' ? 'delivered' : 'saved';
+  }
+  // Fallback (no funciona dentro del visor de artefactos, pero no estorba)
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.style.display = 'none';
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{ document.body.removeChild(a); URL.revokeObjectURL(url); }, 2000);
+  return 'saved';
+}
+
+const WITTY_FALLBACKS = [
+  'Ni tan sano que aburra, ni tan calórico que dé miedo: el equilibrio de toda la vida.',
+  'Esta receta no cura nada, pero al menos no complica las cosas.',
+  'Verduras con dignidad y una pizca de sentido común: nada más, nada menos.',
+  'No promete milagros, promete que vas a repetir plato.',
+  'Un clásico de toda la vida, sin necesidad de reinventarlo con superalimentos de moda.',
+  'Si esto no te anima a comer verdura, poco más se puede hacer.',
+  'Receta con pocos ingredientes y ninguna excusa para no intentarlo.',
+  'Nutritiva, sencilla y sin ínfulas: como debería ser la comida de cada día.',
+  'Aquí no hay trucos de restaurante con estrella, solo buena cocina de siempre.',
+  'Ideal para esos días en los que la nevera pide poco esfuerzo y buen resultado.',
+];
+function hashStr(s){
+  let h = 0;
+  s = String(s||'');
+  for(let i=0;i<s.length;i++){ h = (h*31 + s.charCodeAt(i)) | 0; }
+  return Math.abs(h);
+}
+function fallbackWittyIntro(rec){
+  const key = rec.id || rec.name || 'receta';
+  return WITTY_FALLBACKS[hashStr(key) % WITTY_FALLBACKS.length];
+}
+const wittyIntroCache = {}; // id/nombre -> frase, para no repetir la llamada a la IA en la misma sesión
+async function getWittyIntro(rec){
+  const key = rec.id || rec.name || '';
+  if(key && wittyIntroCache[key]) return wittyIntroCache[key];
+  if(state.sample){
+    try{
+      const ingNames = (rec.ingredients||[]).map(i=>i.name).filter(Boolean).slice(0,6).join(', ');
+      const prompt = `Eres un chef y nutricionista con un sentido del humor seco y simpático, nunca ofensivo ni grosero. Escribe UNA frase breve (máximo 2 frases cortas) a modo de introducción desenfadada para la receta "${rec.name||'este plato'}", que lleva estos ingredientes principales: ${ingNames||'ingredientes variados'}. Un toque de ironía o humor ácido está bien, pero nunca cruel ni subido de tono.
+
+Devuelve SOLO un objeto JSON, sin texto adicional ni explicación, con este formato exacto: {"intro": string}`;
+      const data = await state.sample.json(prompt, {modelTier:'default'});
+      const intro = String(data?.intro||'').trim();
+      if(intro){ if(key) wittyIntroCache[key] = intro; return intro; }
+    }catch(e){ console.warn('witty intro error', e); }
+  }
+  const fallback = fallbackWittyIntro(rec);
+  if(key) wittyIntroCache[key] = fallback;
+  return fallback;
+}
+async function shareRecipeAsPDF(rec){
+  const btn = $('#shareRecipeBtn');
+  if(btn){ btn.disabled = true; btn.textContent = 'Preparando…'; }
+  try{
+    const intro = await getWittyIntro(rec);
+    const doc = new PDFDoc();
+    doc.heading(rec.name || 'Receta', 20);
+    const metaBits = [
+      rec.timeMinutes ? `${rec.timeMinutes} min` : '',
+      rec.servings ? `${rec.servings} raciones` : '',
+    ].filter(Boolean).join(' · ');
+    if(metaBits){ doc.paragraph(metaBits, 10.5, {justify:false}); }
+    doc.spacer(6);
+    doc.paragraph(intro || '', 11, {justify:true});
+    doc.spacer(14);
+    doc.heading('Ingredientes', 13);
+    doc.spacer(4);
+    const ings = (rec.ingredients||[]).filter(i=>i.name);
+    if(ings.length){
+      for(const i of ings){
+        const line = ['-', i.amount, i.unit, i.name].filter(Boolean).join(' ');
+        doc.paragraph(line, 11, {justify:false});
+      }
+    } else {
+      doc.paragraph('- (sin ingredientes indicados)', 11, {justify:false});
+    }
+    doc.spacer(14);
+    doc.heading('Pasos', 13);
+    doc.spacer(4);
+    const steps = (rec.steps||[]).filter(Boolean);
+    if(steps.length){
+      steps.forEach((s,i)=>{ doc.paragraph((i+1)+'. '+s, 11, {justify:true}); doc.spacer(3); });
+    } else {
+      doc.paragraph('(sin pasos indicados)', 11, {justify:false});
+    }
+    const blob = pdfStringToBlob(doc.finish());
+    const filename = (rec.name||'receta').replace(/[^\w\-]+/g,'_') + '.pdf';
+    const outcome = await offerBlobDownload(blob, filename);
+    toast(outcome === 'delivered' ? 'PDF enviado' : 'Receta descargada en PDF');
+  }catch(e){
+    console.warn('share pdf error', e);
+    const code = e && e.code;
+    if(code === 'declined'){
+      // El usuario ha cancelado el guardado: no es un error, no mostramos nada.
+    } else if(code === 'rate_limited'){
+      toast('Espera un momento e inténtalo de nuevo');
+    } else if(code === 'unavailable' || code === 'not_granted' || code === 'capability_disabled' || code === 'capability_removed'){
+      toast('Descargar el PDF no está disponible en esta vista');
+    } else {
+      toast('No se ha podido generar el PDF de la receta');
+    }
+  }finally{
+    if(btn){ btn.disabled = false; btn.innerHTML = `${SHARE_ICON} Compartir`; }
+  }
+}
+
+function recipeFormHTML(rec, existingId, activeTab){
+  activeTab = activeTab || 'ingredientes';
+  const ingRows = rec.ingredients.map((ing,i)=>`
+    <div class="ing-row" data-ingrow="${i}">
+      <input type="text" placeholder="Ingrediente" value="${esc(ing.name)}" data-ing="name">
+      <input type="text" placeholder="Cant." value="${esc(ing.amount)}" data-ing="amount">
+      <input type="text" placeholder="Unidad" value="${esc(ing.unit)}" data-ing="unit">
+      <button type="button" class="row-remove" data-removeing="${i}" aria-label="Quitar ingrediente">×</button>
+    </div>`).join('');
+  const stepRows = rec.steps.map((s,i)=>`
+    <div class="step-row" data-steprow="${i}">
+      <span class="num" style="width:20px;flex-shrink:0;color:var(--ink-soft);font-size:13px;padding-top:12px">${i+1}.</span>
+      <textarea data-step>${esc(s)}</textarea>
+      <button type="button" class="row-remove" data-removestep="${i}">×</button>
+    </div>`).join('');
+  const mealChips = MEAL_TYPES.map(m=>`<button type="button" class="chip ${rec.mealTypes.includes(m.id)?'on':''}" data-formmeal="${m.id}">${esc(m.label)}</button>`).join('');
+  const foodChips = FOOD_TYPES.map(ft=>`<button type="button" class="chip ${rec.foodType===ft.id?'on':''}" data-foodtype="${ft.id}">${foodTypeIcon(ft.id,14)}${esc(ft.label)}</button>`).join('');
+  const cookStyleChips = COOK_STYLES.map(cs=>`<button type="button" class="chip ${rec.cookStyle===cs.id?'on':''}" data-cookstyle="${cs.id}">${esc(cs.label)}</button>`).join('');
+  const total = (rec.plate.veg||0)+(rec.plate.protein||0)+(rec.plate.carbs||0);
+  const canSpeak = 'speechSynthesis' in window;
+
+  return `
+    <div class="sheet-handle"></div>
+    ${sheetTopbarHTML(existingId? 'Editar receta':'Confirmar receta')}
+    <div class="row between" style="margin-top:-6px;margin-bottom:10px;gap:10px;align-items:flex-start">
+      ${rec.source==='claude'
+        ? `<p class="hint" style="margin:0;flex:1;display:flex;align-items:center;gap:7px">${provenanceBadgeHTML(rec, 18, true)} ${rec.adaptedByUser?'Sugerencia de Gastrosoto que ajustaste tú; sigue editándola cuando quieras.':'Sugerencia de Gastrosoto; puedes editarla como cualquier otra receta tuya.'}</p>`
+        : `<p class="hint" style="margin:0;flex:1;display:flex;align-items:center;gap:7px">${provenanceBadgeHTML(rec, 18, true)} Receta creada por ti; puedes editarla cuando quieras.</p>`}
+      ${existingId ? `<button type="button" class="btn btn-ghost btn-sm" id="shareRecipeBtn" title="Descargar esta receta como PDF" aria-label="Compartir receta como PDF">${SHARE_ICON} Compartir</button>` : ''}
+    </div>
+    <div class="row" style="gap:10px;align-items:flex-end">
+      <div id="formFoodIcon">${foodIconBadge(rec.foodType, 40)}</div>
+      <div style="flex:1;min-width:0">
+        <label class="field-label">Nombre del plato</label>
+        <input type="text" id="fName" value="${esc(rec.name)}" placeholder="Ej. Lentejas estofadas">
+      </div>
+    </div>
+
+    <div class="segmented sheet-tabbar" id="formTabbar">
+      <button type="button" data-formtab="ingredientes" class="${activeTab==='ingredientes'?'active':''}">Ingredientes</button>
+      <button type="button" data-formtab="pasos" class="${activeTab==='pasos'?'active':''}">Pasos</button>
+      <button type="button" data-formtab="otros" class="${activeTab==='otros'?'active':''}">Otros</button>
+    </div>
+
+    <div data-tabpanel="ingredientes" ${activeTab==='ingredientes'?'':'hidden'}>
+      <div class="row" style="gap:10px;margin-bottom:12px">
+        <div style="flex:1"><label class="field-label">Tiempo (min)</label><input type="number" id="fTime" value="${rec.timeMinutes||''}" min="0"></div>
+        <div style="flex:1"><label class="field-label">Raciones</label><input type="number" id="fServings" value="${rec.servings||4}" min="1"></div>
+      </div>
+      <div class="stack" id="ingList" style="gap:6px">${ingRows}</div>
+      <button type="button" class="btn btn-ghost btn-sm" id="addIng" style="margin-top:8px">+ Ingrediente</button>
+    </div>
+
+    <div data-tabpanel="pasos" ${activeTab==='pasos'?'':'hidden'}>
+      ${canSpeak ? `<button type="button" class="btn btn-ghost btn-sm tts-btn" id="ttsBtn">${TTS_ICON}<span id="ttsBtnLabel">Leer en voz alta</span></button>` : ''}
+      <div class="stack" id="stepList" style="gap:8px">${stepRows}</div>
+      <button type="button" class="btn btn-ghost btn-sm" id="addStep" style="margin-top:8px">+ Paso</button>
+    </div>
+
+    <div data-tabpanel="otros" ${activeTab==='otros'?'':'hidden'}>
+      <div class="stack tight">
+        <div>
+          <label class="field-label">Tipo de comida</label>
+          <div class="row wrap center" style="gap:8px">${mealChips}</div>
+        </div>
+
+        <div class="row" style="gap:10px">
+          <div style="flex:1">
+            <label class="field-label">Se sirve</label>
+            <select id="fTemp">
+              <option value="caliente" ${rec.temp==='caliente'?'selected':''}>Caliente</option>
+              <option value="fria" ${rec.temp==='fria'?'selected':''}>Fría</option>
+              <option value="ambas" ${rec.temp==='ambas'?'selected':''}>Ambas</option>
+            </select>
+          </div>
+          <div style="flex:1">
+            <label class="field-label">Temporada</label>
+            <select id="fSeason">${SEASONS.map(s=>`<option value="${s.id}" ${rec.season===s.id?'selected':''}>${esc(s.label)}</option>`).join('')}</select>
+          </div>
+        </div>
+
+        <div>
+          <label class="field-label">Función en el menú</label>
+          <select id="fRole">${ROLES.map(r=>`<option value="${r.id}" ${rec.role===r.id?'selected':''}>${esc(r.label)}</option>`).join('')}</select>
+        </div>
+
+        <div>
+          <label class="field-label">Tipo de alimento principal</label>
+          <div class="food-type-picker" id="foodTypeChips">${foodChips}</div>
+        </div>
+
+        <div>
+          <label class="field-label">Ingrediente principal</label>
+          <input type="text" id="fMainIngredient" value="${esc(rec.mainIngredientDetail||'')}" placeholder="Ej. lentejas, pollo, caballa…">
+        </div>
+
+        <div>
+          <label class="field-label">Estilo de cocción</label>
+          <div class="food-type-picker" id="cookStyleChips">${cookStyleChips}</div>
+        </div>
+
+        <div>
+          <label class="field-label">Peso del plato</label>
+          <div class="segmented">
+            <button type="button" data-weight="ligero" class="${rec.weight==='ligero'?'active':''}">Ligero</button>
+            <button type="button" data-weight="contundente" class="${rec.weight!=='ligero'?'active':''}">Contundente</button>
+          </div>
+        </div>
+
+        <div id="meatTypeWrap" style="${rec.foodType==='carne'?'':'display:none'}">
+          <label class="field-label">Tipo de carne</label>
+          <div class="segmented">
+            <button type="button" data-meattype="blanca" class="${rec.meatType==='blanca'?'active':''}">Blanca</button>
+            <button type="button" data-meattype="roja" class="${rec.meatType==='roja'?'active':''}">Roja</button>
+          </div>
+        </div>
+
+        <div id="fishTypeWrap" style="${rec.foodType==='pescado'?'':'display:none'}">
+          <label class="field-label">Tipo de pescado</label>
+          <div class="segmented">
+            <button type="button" data-fishtype="blanco" class="${rec.fishType==='blanco'?'active':''}">Blanco</button>
+            <button type="button" data-fishtype="azul" class="${rec.fishType==='azul'?'active':''}">Azul</button>
+          </div>
+        </div>
+
+        <div class="card" style="background:var(--surface-2);border:none">
+          <div class="row between" style="margin-bottom:8px">
+            <label class="field-label" style="margin:0">Reparto del plato (método de Harvard)</label>
+            ${plateDot(rec.plate, 30)}
+          </div>
+          <p class="hint" style="margin-top:-4px;margin-bottom:8px">Sólo tiene sentido rellenarlo cuando el plato es principal: calcula, a ojo, qué porcentaje ocupan las verduras y frutas, las proteínas y los hidratos.</p>
+          <div class="row" style="gap:8px">
+            <div style="flex:1"><span class="hint">Verduras/frutas %</span><input type="number" id="fVeg" value="${rec.plate.veg||0}" min="0" max="100"></div>
+            <div style="flex:1"><span class="hint">Proteínas %</span><input type="number" id="fProtein" value="${rec.plate.protein||0}" min="0" max="100"></div>
+            <div style="flex:1"><span class="hint">Hidratos %</span><input type="number" id="fCarb" value="${rec.plate.carbs||0}" min="0" max="100"></div>
+          </div>
+          <p class="hint" id="plateSum" style="margin-top:6px">Suma actual: ${total}%${rec.role!=='plato_principal'?' (este plato no es principal, así que no afecta a la planificación)':''}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="gap:10px;margin-top:16px">
+      ${existingId? `<button class="btn btn-danger" id="deleteRecipeBtn">Eliminar</button>`:''}
+      <button class="btn btn-primary btn-block" id="saveRecipeBtn">Guardar receta</button>
+    </div>
+  `;
+}
+
+function readRecipeForm(rec){
+  rec.name = $('#fName').value.trim() || 'Sin nombre';
+  rec.timeMinutes = $('#fTime').value ? parseInt($('#fTime').value,10) : null;
+  rec.servings = $('#fServings').value ? parseInt($('#fServings').value,10) : 4;
+  rec.ingredients = $all('[data-ingrow]').map(row=>({
+    amount: $('[data-ing="amount"]', row).value.trim(),
+    unit: $('[data-ing="unit"]', row).value.trim(),
+    name: $('[data-ing="name"]', row).value.trim(),
+  })).filter(i=>i.name);
+  rec.steps = $all('[data-steprow]').map(row=> $('[data-step]', row).value.trim() ).filter(Boolean);
+  rec.temp = $('#fTemp').value;
+  rec.season = $('#fSeason').value;
+  rec.role = $('#fRole').value;
+  const foodTypeBtn = $('.chip.on[data-foodtype]');
+  rec.foodType = foodTypeBtn ? foodTypeBtn.dataset.foodtype : guessFoodType(rec);
+  rec.mainIngredientDetail = $('#fMainIngredient').value.trim();
+  const cookStyleBtn = $('.chip.on[data-cookstyle]');
+  rec.cookStyle = cookStyleBtn ? cookStyleBtn.dataset.cookstyle : guessCookStyle(rec);
+  const weightBtn = $('[data-weight].active');
+  rec.weight = weightBtn ? weightBtn.dataset.weight : 'contundente';
+  const meatBtn = $('[data-meattype].active');
+  rec.meatType = meatBtn ? meatBtn.dataset.meattype : '';
+  const fishBtn = $('[data-fishtype].active');
+  rec.fishType = fishBtn ? fishBtn.dataset.fishtype : '';
+  rec.plate = { veg: parseInt($('#fVeg').value||0,10), protein: parseInt($('#fProtein').value||0,10), carbs: parseInt($('#fCarb').value||0,10) };
+  return rec;
+}
+
+function wireRecipeForm(rec, existingId, activeTab){
+  activeTab = activeTab || 'ingredientes';
+  let speaking = false;
+  wireSheetBack();
+
+  /* Detección automática del tipo de alimento: mientras el usuario no
+     elija él mismo una categoría en esta sesión de edición (rec._foodTypeTouched),
+     recalculamos a partir del nombre y de los ingredientes cada vez que cambian. */
+  function updateFoodTypeUI(ft){
+    $all('[data-foodtype]').forEach(x=> x.classList.toggle('on', x.dataset.foodtype===ft));
+    const meatWrap = $('#meatTypeWrap'), fishWrap = $('#fishTypeWrap');
+    if(meatWrap) meatWrap.style.display = ft==='carne' ? '' : 'none';
+    if(fishWrap) fishWrap.style.display = ft==='pescado' ? '' : 'none';
+    const icon = $('#formFoodIcon');
+    if(icon) icon.innerHTML = foodIconBadge(ft, 40);
+  }
+  function recomputeFoodTypeGuess(){
+    if(rec._foodTypeTouched) return;
+    const nameVal = $('#fName') ? $('#fName').value : rec.name;
+    const ingNames = $all('[data-ing="name"]').map(inp=>({name:inp.value}));
+    const guessed = guessFoodType({name:nameVal, ingredients:ingNames});
+    rec.foodType = guessed;
+    updateFoodTypeUI(guessed);
+  }
+  $('#fName')?.addEventListener('input', recomputeFoodTypeGuess);
+  $all('[data-ing="name"]').forEach(inp=> inp.addEventListener('input', recomputeFoodTypeGuess));
+
+  /* Detección automática del estilo de cocción: mismo patrón que el tipo de
+     alimento, bloqueada en cuanto el usuario elige un estilo a mano. */
+  function updateCookStyleUI(cs){
+    $all('[data-cookstyle]').forEach(x=> x.classList.toggle('on', x.dataset.cookstyle===cs));
+  }
+  function recomputeCookStyleGuess(){
+    if(rec._cookStyleTouched) return;
+    const nameVal = $('#fName') ? $('#fName').value : rec.name;
+    const guessed = guessCookStyle({name:nameVal});
+    rec.cookStyle = guessed;
+    updateCookStyleUI(guessed);
+  }
+  $('#fName')?.addEventListener('input', recomputeCookStyleGuess);
+  $all('[data-cookstyle]').forEach(b=> b.addEventListener('click', ()=>{
+    rec._cookStyleTouched = true;
+    rec.cookStyle = b.dataset.cookstyle;
+    updateCookStyleUI(b.dataset.cookstyle);
+  }));
+
+  $all('[data-formtab]').forEach(b=> b.addEventListener('click', ()=>{
+    activeTab = b.dataset.formtab;
+    $all('[data-formtab]').forEach(x=> x.classList.toggle('active', x===b));
+    $all('[data-tabpanel]').forEach(p=> p.hidden = p.dataset.tabpanel!==activeTab);
+  }));
+
+  $('#addIng').addEventListener('click', ()=>{ rec = readRecipeForm(rec); rec.ingredients.push({name:'',amount:'',unit:''}); renderRecipeForm(rec, existingId, activeTab); });
+  $('#addStep').addEventListener('click', ()=>{ rec = readRecipeForm(rec); rec.steps.push(''); renderRecipeForm(rec, existingId, activeTab); });
+  $all('[data-removeing]').forEach(b=> b.addEventListener('click', ()=>{ rec = readRecipeForm(rec); rec.ingredients.splice(parseInt(b.dataset.removeing,10),1); if(!rec.ingredients.length) rec.ingredients.push({name:'',amount:'',unit:''}); renderRecipeForm(rec, existingId, activeTab); }));
+  $all('[data-removestep]').forEach(b=> b.addEventListener('click', ()=>{ rec = readRecipeForm(rec); rec.steps.splice(parseInt(b.dataset.removestep,10),1); if(!rec.steps.length) rec.steps.push(''); renderRecipeForm(rec, existingId, activeTab); }));
+  $all('[data-formmeal]').forEach(b=> b.addEventListener('click', ()=>{
+    const id=b.dataset.formmeal; const i=rec.mealTypes.indexOf(id);
+    if(i>-1) rec.mealTypes.splice(i,1); else rec.mealTypes.push(id);
+    b.classList.toggle('on');
+  }));
+  $all('[data-foodtype]').forEach(b=> b.addEventListener('click', ()=>{
+    rec._foodTypeTouched = true;
+    rec.foodType = b.dataset.foodtype;
+    updateFoodTypeUI(b.dataset.foodtype);
+  }));
+  $all('[data-weight]').forEach(b=> b.addEventListener('click', ()=>{
+    b.parentElement.querySelectorAll('button').forEach(x=> x.classList.remove('active'));
+    b.classList.add('active');
+  }));
+  $all('[data-meattype]').forEach(b=> b.addEventListener('click', ()=>{
+    b.parentElement.querySelectorAll('button').forEach(x=> x.classList.remove('active'));
+    b.classList.add('active');
+  }));
+  $all('[data-fishtype]').forEach(b=> b.addEventListener('click', ()=>{
+    b.parentElement.querySelectorAll('button').forEach(x=> x.classList.remove('active'));
+    b.classList.add('active');
+  }));
+  ['fVeg','fProtein','fCarb'].forEach(id=> $('#'+id).addEventListener('input', ()=>{
+    const v = parseInt($('#fVeg').value||0,10), p = parseInt($('#fProtein').value||0,10), c = parseInt($('#fCarb').value||0,10);
+    $('#plateSum').textContent = `Suma actual: ${v+p+c}%`;
+  }));
+
+  const ttsBtn = $('#ttsBtn');
+  if(ttsBtn && 'speechSynthesis' in window){
+    const label = $('#ttsBtnLabel');
+    function updateTtsBtn(){
+      ttsBtn.classList.toggle('speaking', speaking);
+      ttsBtn.innerHTML = (speaking?STOP_ICON:TTS_ICON) + `<span id="ttsBtnLabel">${speaking?'Detener lectura':'Leer en voz alta'}</span>`;
+    }
+    ttsBtn.addEventListener('click', ()=>{
+      if(speaking){
+        speechSynthesis.cancel();
+        speaking = false;
+        updateTtsBtn();
+        return;
+      }
+      const stepsNow = $all('[data-steprow]').map(row=> $('[data-step]', row).value.trim()).filter(Boolean);
+      if(!stepsNow.length){ toast('Añade algún paso antes de escucharlo'); return; }
+      const text = stepsNow.map((s,i)=>`Paso ${i+1}: ${s}.`).join(' ');
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'es-ES';
+      utter.onend = ()=>{ speaking = false; updateTtsBtn(); };
+      utter.onerror = ()=>{ speaking = false; updateTtsBtn(); };
+      speechSynthesis.cancel();
+      speechSynthesis.speak(utter);
+      speaking = true;
+      updateTtsBtn();
+    });
+  }
+
+  const shareBtn = $('#shareRecipeBtn');
+  if(shareBtn) shareBtn.addEventListener('click', ()=>{
+    const current = readRecipeForm(JSON.parse(JSON.stringify(rec)));
+    shareRecipeAsPDF(current);
+  });
+
+  const delBtn = $('#deleteRecipeBtn');
+  if(delBtn) delBtn.addEventListener('click', async ()=>{
+    if(!state.db){ toast('Sin conexión a la base de datos'); return; }
+    try{ await state.db.doc('recipes/'+existingId).delete(); toast('Receta eliminada'); closeSheet(); }
+    catch(e){ toast('No se pudo eliminar'); }
+  });
+  $('#saveRecipeBtn').addEventListener('click', async ()=>{
+    rec = readRecipeForm(rec);
+    if(!rec.name){ toast('Ponle un nombre al plato'); return; }
+    if(!state.db){ toast('Sin conexión a la base de datos: no se pudo guardar.'); return; }
+    if(existingId && rec.source==='claude') rec.adaptedByUser = true;
+    delete rec._foodTypeTouched;
+    delete rec._cookStyleTouched;
+    try{
+      if(existingId){
+        await state.db.doc('recipes/'+existingId).set({...rec, updatedAt:Date.now()});
+      } else {
+        await state.db.collection('recipes').add({...rec, createdAt:Date.now(), updatedAt:Date.now()});
+      }
+      toast('Receta guardada');
+      closeSheet();
+    }catch(e){ console.warn(e); toast('No se pudo guardar la receta'); }
+  });
+}
+
+/* ---- Buscador de ideas de recetas con IA ---- */
+function recipeSearchSheetHTML(draft){
+  const cuisineChips = CUISINE_OPTIONS.map(c=>`<button type="button" class="chip ${draft.cuisines.includes(c.id)?'on':''}" data-searchcuisine="${c.id}">${esc(c.label)}</button>`).join('');
+  const mealChips = MEAL_TYPES.map(m=>`<button type="button" class="chip ${draft.mealTypes.includes(m.id)?'on':''}" data-searchmeal="${m.id}">${esc(m.label)}</button>`).join('');
+  const dietChips = DIET_OPTIONS.map(d=>`<button type="button" class="chip ${draft.diets.includes(d.id)?'on':''}" data-searchdiet="${d.id}">${esc(d.label)}</button>`).join('');
+  return `
+    <div class="sheet-handle"></div>
+    ${sheetTopbarHTML('Descubrir recetas')}
+    <p class="hint" style="margin-top:-4px;margin-bottom:10px">Cuéntame qué te apetece, qué ingrediente quieres aprovechar, o el nombre de un plato concreto, y te propongo ideas como chef y nutricionista. Son propuestas mías a partir de mi propio conocimiento, no resultados de una búsqueda en internet.</p>
+    <div class="stack tight">
+      <div>
+        <label class="field-label">¿Qué te apetece?</label>
+        <input type="text" id="searchQuery" placeholder="Ej. algo con calabacín, comida rápida… o un plato como «gazpacho»" value="${esc(draft.query)}">
+      </div>
+      <div>
+        <label class="field-label">Cocina</label>
+        <div class="row wrap" style="gap:7px">${cuisineChips}</div>
+      </div>
+      <div>
+        <label class="field-label">Tipo de comida</label>
+        <div class="row wrap" style="gap:7px">${mealChips}</div>
+      </div>
+      <div>
+        <label class="field-label">Opciones dietéticas (opcional)</label>
+        <div class="row wrap" style="gap:7px">${dietChips}</div>
+      </div>
+      <div id="recipeSearchAction"></div>
+      <div id="recipeSearchResults"></div>
+    </div>
+  `;
+}
+
+function openRecipeSearchSheet(){
+  if(!state.sample){ toast('El buscador de ideas con IA no está disponible en esta vista.'); return; }
+  const draft = {query:'', cuisines:[], mealTypes:[], diets:[]};
+  openSheet(recipeSearchSheetHTML(draft), ()=> wireRecipeSearchSheet(draft));
+}
+
+function wireRecipeSearchSheet(draft){
+  wireSheetBack();
+  $all('[data-searchcuisine]').forEach(b=> b.addEventListener('click', ()=>{
+    const id=b.dataset.searchcuisine; const i=draft.cuisines.indexOf(id);
+    if(i>-1) draft.cuisines.splice(i,1); else draft.cuisines.push(id);
+    b.classList.toggle('on');
+  }));
+  $all('[data-searchmeal]').forEach(b=> b.addEventListener('click', ()=>{
+    const id=b.dataset.searchmeal; const i=draft.mealTypes.indexOf(id);
+    if(i>-1) draft.mealTypes.splice(i,1); else draft.mealTypes.push(id);
+    b.classList.toggle('on');
+  }));
+  $all('[data-searchdiet]').forEach(b=> b.addEventListener('click', ()=>{
+    const id=b.dataset.searchdiet; const i=draft.diets.indexOf(id);
+    if(i>-1) draft.diets.splice(i,1); else draft.diets.push(id);
+    b.classList.toggle('on');
+  }));
+
+  const actionHost = $('#recipeSearchAction');
+  const resultsHost = $('#recipeSearchResults');
+  function renderAction(thinking){
+    actionHost.innerHTML = `
+      ${thinking ? `<div class="thinking"><span class="spinner"></span> Pensando ideas de recetas…</div>` : ''}
+      <button class="btn btn-primary btn-block" id="doSearchBtn" ${thinking?'disabled':''}>Buscar ideas</button>
+    `;
+    $('#doSearchBtn').addEventListener('click', doRecipeSearch);
+  }
+  renderAction(false);
+
+  async function doRecipeSearch(){
+    draft.query = $('#searchQuery').value.trim();
+    resultsHost.innerHTML = '';
+    renderAction(true);
+    const cuisineLabels = draft.cuisines.map(id=>(CUISINE_OPTIONS.find(c=>c.id===id)||{}).label).filter(Boolean);
+    const mealLabels = draft.mealTypes.map(id=>(MEAL_TYPES.find(m=>m.id===id)||{}).label).filter(Boolean);
+    const dietLabels = draft.diets.map(id=>(DIET_OPTIONS.find(d=>d.id===id)||{}).label).filter(Boolean);
+    const prompt = `Eres un chef y nutricionista. El usuario busca ideas de recetas a partir de este texto: "${draft.query || 'sin indicar, sorprende con variedad'}".
+
+Si el texto nombra un plato concreto (por ejemplo "gazpacho" o "mazamorra"), céntrate en ese plato: propón su versión clásica y, si tiene sentido, entre 1 y 2 variantes cercanas (una versión regional, una adaptación más ligera, etc.), en vez de forzar 5 ideas sin relación con lo pedido. Si el texto describe más bien un antojo, un ingrediente que aprovechar o un tipo de cocina sin nombrar un plato concreto, propón 5 ideas variadas para una familia.
+
+Ajusta las propuestas también a estos criterios, cuando se hayan indicado:
+- Cocina preferida: ${cuisineLabels.length? cuisineLabels.join(', ') : 'cualquiera; procura variar el origen de los platos, incluyendo con naturalidad alguna propuesta de cocina asiática (china, japonesa, tailandesa o india) si encaja bien'}
+- Tipo de comida: ${mealLabels.length? mealLabels.join(', ') : 'cualquiera'}
+- Necesidades dietéticas: ${dietLabels.length? dietLabels.join(', ') : 'ninguna en concreto'}
+
+Cuando propongas varias ideas sin un plato concreto en mente, procura que sean variadas entre sí: no repitas el mismo ingrediente principal ni el mismo origen en todas. Estas son propuestas basadas en tu propio conocimiento como chef, no resultado de una búsqueda en internet.
+
+Devuelve SOLO un objeto JSON, sin texto adicional ni explicación, con este formato exacto:
+{
+  "recipes": [
+    {
+      "name": string,
+      "cuisine": string,
+      "ingredients": [{"name": string, "amount": string, "unit": string}],
+      "steps": [string, ...],
+      "timeMinutes": number,
+      "servings": number,
+      "mealTypes": array con las que correspondan entre "desayuno","almuerzo","comida","cena","merienda",
+      "temp": "fria" | "caliente" | "ambas",
+      "season": "invierno" | "verano" | "entretiempo" | "todo_el_año",
+      "role": "plato_principal" | "guarnicion" | "postre" | "desayuno_item" | "bebida",
+      "plate": {"veg": number, "protein": number, "carbs": number},
+      "foodType": "carne" | "pescado" | "marisco" | "legumbre" | "proteina_vegetal" | "huevo" | "lacteo" | "cereal" | "verdura" | "fruta" | "otro",
+      "mainIngredientDetail": string,
+      "weight": "ligero" | "contundente",
+      "cookStyle": "estofado" | "ensalada" | "horno" | "plancha" | "guiso" | "pure" | "salteado" | "asado" | "wok" | "sopa" | "crema" | "frito" | "otro"
+    }
+  ]
+}
+
+Reglas: "cuisine" es el origen del plato en una o dos palabras (ej. "Española", "Tailandesa", "Japonesa"). Para "plate", si role es "plato_principal", estima el reparto aproximado en porcentaje según el método del plato de Harvard (mitad verduras y frutas, un cuarto proteínas, un cuarto hidratos), favoreciendo una buena proporción de verduras; si no es plato principal usa 0 en veg, protein y carbs. "foodType" es la categoría del ingrediente protagonista. "mainIngredientDetail" es ese ingrediente concreto en una o dos palabras. "weight" es "contundente" para guisos, platos de cuchara, arroces o carnes copiosas, y "ligero" para ensaladas, cremas, platos fríos o pescados suaves. "cookStyle" es el estilo de cocción predominante (el que mejor encaje; "otro" si no encaja en ninguno). "timeMinutes" es el tiempo total estimado en minutos y "servings" las raciones (4 si no aplica). Los "steps" van en español, uno por elemento, en infinitivo o imperativo, sin numerarlos tú.`;
+    try{
+      const data = await state.sample.json(prompt, {modelTier:'default'});
+      const list = Array.isArray(data.recipes) ? data.recipes : (Array.isArray(data) ? data : []);
+      if(!list.length) throw {code:'invalid_json'};
+      list.sort((a,b)=> String(a.name||'').localeCompare(String(b.name||''), 'es'));
+      renderAction(false);
+      resultsHost.innerHTML = `<label class="field-label">Propuestas</label><div class="stack" style="gap:4px">${list.map((r,i)=>searchResultRowHTML(r,i)).join('')}</div>`;
+      $all('[data-searchresult]', resultsHost).forEach(row=> row.addEventListener('click', ()=>{
+        const idx = parseInt(row.dataset.searchresult,10);
+        openSearchResultAsRecipe(list[idx]);
+      }));
+    }catch(e){
+      console.warn('recipe search error', e);
+      const msgs = {
+        not_granted:'No se ha autorizado usar el buscador de ideas en esta vista.',
+        rate_limited:'Demasiadas peticiones seguidas, prueba de nuevo en un momento.',
+        invalid_json:'No he podido interpretar bien las propuestas. Prueba a describir lo que quieres con otras palabras.',
+      };
+      toast(msgs[e.code] || 'No se han podido buscar ideas de recetas ahora mismo.');
+      renderAction(false);
+    }
+  }
+}
+
+function searchResultRowHTML(r, i){
+  const ft = FOOD_TYPES.some(x=>x.id===r.foodType) ? r.foodType : guessFoodType({name:r.name, ingredients:r.ingredients||[]});
+  return `
+    <button type="button" class="pick-row" data-searchresult="${i}">
+      <span class="row" style="gap:10px;flex:1;min-width:0">
+        ${foodIconBadge(ft, 30)}
+        <span style="min-width:0;overflow:hidden;text-align:left">
+          <span style="display:block;font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.name||'Receta')}</span>
+          <span class="hint">${esc(r.cuisine||'')}</span>
+        </span>
+      </span>
+    </button>`;
+}
+
+function openSearchResultAsRecipe(data){
+  const rec = blankRecipe();
+  rec.name = String(data.name||'').trim();
+  rec.ingredients = Array.isArray(data.ingredients) && data.ingredients.length ? data.ingredients.map(i=>({name:String(i.name||''), amount:String(i.amount||''), unit:String(i.unit||'')})) : blankRecipe().ingredients;
+  rec.steps = Array.isArray(data.steps) && data.steps.length ? data.steps.map(String) : [''];
+  rec.timeMinutes = Number.isFinite(data.timeMinutes) ? Math.round(data.timeMinutes) : null;
+  rec.servings = Number.isFinite(data.servings) ? Math.round(data.servings) : 4;
+  rec.mealTypes = Array.isArray(data.mealTypes) ? data.mealTypes.filter(m=>MEAL_TYPES.some(x=>x.id===m)) : [];
+  rec.temp = ['fria','caliente','ambas'].includes(data.temp) ? data.temp : 'ambas';
+  rec.season = ['invierno','verano','entretiempo','todo_el_año'].includes(data.season) ? data.season : 'todo_el_año';
+  rec.role = ROLES.some(x=>x.id===data.role) ? data.role : 'plato_principal';
+  rec.plate = {
+    veg: Number.isFinite(data.plate?.veg)? Math.round(data.plate.veg):0,
+    protein: Number.isFinite(data.plate?.protein)? Math.round(data.plate.protein):0,
+    carbs: Number.isFinite(data.plate?.carbs)? Math.round(data.plate.carbs):0,
+  };
+  rec.foodType = FOOD_TYPES.some(x=>x.id===data.foodType) ? data.foodType : guessFoodType({name:rec.name, ingredients:rec.ingredients});
+  rec.mainIngredientDetail = String(data.mainIngredientDetail||'').trim();
+  rec.weight = data.weight==='ligero' ? 'ligero' : 'contundente';
+  rec.cookStyle = COOK_STYLES.some(x=>x.id===data.cookStyle) ? data.cookStyle : guessCookStyle(rec);
+  rec.source = 'claude';
+  rec._foodTypeTouched = true; // ya viene categorizada por la propuesta
+  rec._cookStyleTouched = true;
+  renderRecipeForm(rec, null);
+  toast('Revisa la propuesta, ajústala si quieres y guárdala');
+}
+
+/* =======================================================================
+   TAB: PLANIFICACIÓN
+======================================================================= */
+function renderPlan(){
+  return `
+    <div class="stack">
+      <div class="segmented">
+        <button data-planview="semanal" class="${state.planView==='semanal'?'active':''}">Semanal</button>
+        <button data-planview="mensual" class="${state.planView==='mensual'?'active':''}">Mensual</button>
+      </div>
+      <div id="planBody">${state.planView==='semanal'? renderWeekBody() : renderMonthBody()}</div>
+    </div>
+  `;
+}
+
+function mealSlotChipHTML(id){
+  const m = MEAL_TYPES.find(x=>x.id===id);
+  return `<button type="button" class="chip ${state.mealSlots.includes(id)?'on':''}" data-slotchip="${id}">${esc(m?m.label:id)}</button>`;
+}
+/* Selector de "Comidas a planificar": en dos filas fijas (en vez de chips que
+   se envuelven) para que cada fila quepa siempre en una sola línea en móvil.
+   Fila 1: las dos comidas principales (comida→"Almuerzo" y cena). Fila 2: el
+   resto (desayuno, almuerzo→"Media mañana" y merienda). */
+function mealSlotGridHTML(){
+  return `
+    <div class="meal-slot-grid">
+      <div class="msg-row">${['comida','cena'].map(mealSlotChipHTML).join('')}</div>
+      <div class="msg-row">${['desayuno','almuerzo','merienda'].map(mealSlotChipHTML).join('')}</div>
+    </div>`;
+}
+
+function whoCardHTML(){
+  return `
+    <div class="whocard">
+      <h3>Cómo se compone un plato equilibrado</h3>
+      <ul>
+        <li>La mitad del plato conviene reservarla para verduras y frutas variadas: son las que más fibra, vitaminas y minerales aportan.</li>
+        <li>Un cuarto para proteínas variadas — legumbres, pescado, huevo o carnes magras son buenas opciones para repartir a lo largo de la semana.</li>
+        <li>El último cuarto para cereales integrales o hidratos de calidad, mejor integrales que refinados siempre que se pueda.</li>
+        <li>La Organización Mundial de la Salud recomienda tomar al menos 400 gramos de fruta y verdura al día, mantener la sal por debajo de 5 gramos diarios y que los azúcares libres no superen el 10% de la energía que consumimos.</li>
+      </ul>
+    </div>`;
+}
+
+/* Resumen, de sólo lectura, de quién falta en casa en las fechas mostradas
+   (reutiliza la misma caché de asistencia que el calendario de Familia).
+   Es una vista "de momento": provisional, sin controles de edición aquí. */
+function agendaSummaryHTML(dates){
+  const missing = dates.some(d => state.attendanceCache[d] === undefined);
+  if(missing){
+    Promise.all(dates.map(d=>getAttendance(d))).then(()=>{ if(state.tab==='plan') renderMain(); });
+    return `<div class="card"><div class="thinking"><span class="spinner"></span> Consultando ausencias de la familia…</div></div>`;
+  }
+  const rows = [];
+  dates.forEach(d=>{
+    const att = state.attendanceCache[d] || {away:[]};
+    const away = att.away || [];
+    if(away.length){
+      const names = away.map(a=> esc(a.name||'') + (a.reason ? ` (${esc((AWAY_REASONS.find(r=>r.id===a.reason)||{}).label||a.reason)})` : '')).join(', ');
+      rows.push(`<li><strong>${esc(fmtDateHuman(d))}</strong> — ${names}</li>`);
+    }
+  });
+  const title = state.planView==='semanal' ? 'Quién falta esta semana' : 'Quién falta este mes';
+  const body = rows.length
+    ? `<ul>${rows.join('')}</ul>`
+    : `<p class="hint" style="margin:0">${state.planView==='semanal'?'Esta semana come':'Este mes come'} toda la familia en casa.</p>`;
+  return `
+    <div class="card">
+      <h2 style="font-size:14px">${esc(title)}</h2>
+      ${body}
+    </div>`;
+}
+
+async function computeDinersForRange(dates){
+  const result = {};
+  for(const d of dates){
+    const att = await getAttendance(d);
+    const away = (att && att.away) || [];
+    result[d] = Math.max(0, state.family.length - away.length);
+  }
+  return result;
+}
+
+/* ---- Historial de planificación (base para dar variedad semana a semana) ---- */
+function emptyPlanningHistory(){
+  return { lastMainIngredientByCategory:{}, lastCookStyleByCategory:{}, redMeatDates:[], recentRecipeIds:[] };
+}
+async function loadPlanningHistory(){
+  if(!state.db) return emptyPlanningHistory();
+  try{
+    const snap = await state.db.doc('planning/history').get();
+    if(!snap.exists) return emptyPlanningHistory();
+    const data = snap.data() || {};
+    return {
+      lastMainIngredientByCategory: data.lastMainIngredientByCategory || {},
+      lastCookStyleByCategory: data.lastCookStyleByCategory || {},
+      redMeatDates: Array.isArray(data.redMeatDates) ? data.redMeatDates : [],
+      recentRecipeIds: Array.isArray(data.recentRecipeIds) ? data.recentRecipeIds : [],
+    };
+  }catch(e){ console.warn('No se pudo cargar el historial de planificación', e); return emptyPlanningHistory(); }
+}
+async function savePlanningHistory(data){
+  if(!state.db) return;
+  try{ await state.db.doc('planning/history').set(data); }
+  catch(e){ console.warn('No se pudo guardar el historial de planificación', e); }
+}
+
+/* ---- Heurísticas sencillas para distinguir carne blanca/roja y pescado blanco/azul,
+   por si la receta no lo indica explícitamente en meatType/fishType. ---- */
+const WHITE_MEAT_WORDS = ['pollo','pavo','conejo','pechuga'];
+const RED_MEAT_WORDS = ['ternera','cerdo','cordero','vacuno','buey','solomillo','chuleta'];
+function classifyMeat(rec){
+  if(rec.meatType==='blanca' || rec.meatType==='roja') return rec.meatType;
+  const text = ((rec.mainIngredientDetail||'')+' '+(rec.name||'')).toLowerCase();
+  if(RED_MEAT_WORDS.some(w=>text.includes(w))) return 'roja';
+  if(WHITE_MEAT_WORDS.some(w=>text.includes(w))) return 'blanca';
+  return '';
+}
+const WHITE_FISH_WORDS = ['merluza','dorada','lubina','bacalao','rape'];
+const OILY_FISH_WORDS = ['caballa','salmón','salmon','sardina','atún','atun','boquerón','boqueron'];
+function classifyFish(rec){
+  if(rec.fishType==='blanco' || rec.fishType==='azul') return rec.fishType;
+  const text = ((rec.mainIngredientDetail||'')+' '+(rec.name||'')).toLowerCase();
+  if(OILY_FISH_WORDS.some(w=>text.includes(w))) return 'azul';
+  if(WHITE_FISH_WORDS.some(w=>text.includes(w))) return 'blanco';
+  return '';
+}
+
+/* Elige una receta entre varias candidatas. `opts` admite:
+   recentIds (evitar repetir), monthNum (bonus de temporada), preferWeight
+   ('ligero'|'contundente', preferencia blanda), history + category (para
+   penalizar suavemente repetir el mismo ingrediente principal). */
+function pickRecipe(candidates, opts){
+  if(!candidates || !candidates.length) return null;
+  opts = opts || {};
+  const recentIds = opts.recentIds || [];
+  const monthNum = opts.monthNum;
+  const preferWeight = opts.preferWeight || null;
+  const history = opts.history || null;
+  const category = opts.category || null;
+  const season = monthNum!=null ? seasonForMonth(monthNum) : null;
+  const scored = candidates.map(r=>{
+    let score = 0;
+    if(recentIds.includes(r.id)) score += 40; // penaliza repetir en esta semana
+    if(history && (history.recentRecipeIds||[]).includes(r.id)) score += 15; // repetido en semanas recientes
+    if(season){
+      if(r.season && r.season!=='todo_el_año' && r.season!==season) score += 12;
+      if(r.season===season) score -= 6;
+    }
+    if(r.role==='plato_principal') score += harvardScore(r.plate)*0.3;
+    if(preferWeight && r.weight){
+      score += r.weight===preferWeight ? -4 : 6;
+    }
+    if(history && category && r.mainIngredientDetail && history.lastMainIngredientByCategory &&
+       history.lastMainIngredientByCategory[category] &&
+       r.mainIngredientDetail.toLowerCase()===String(history.lastMainIngredientByCategory[category]).toLowerCase()){
+      score += 18; // procura no repetir el mismo ingrediente principal semana tras semana
+    }
+    if(history && category && r.cookStyle && history.lastCookStyleByCategory &&
+       history.lastCookStyleByCategory[category] &&
+       r.cookStyle === history.lastCookStyleByCategory[category]){
+      score += 10; // y tampoco repetir el mismo estilo de cocción, aunque cambie el ingrediente
+    }
+    if(opts.preferProteinBearing){
+      score += PROTEIN_BEARING_CATEGORIES.includes(r.foodType) ? -5 : 5;
+    }
+    score += Math.random()*8; // variedad
+    return {r, score};
+  }).sort((a,b)=>a.score-b.score);
+  return scored[0].r;
+}
+
+const COMIDA_WEEK_BUCKET = ['legumbre','cereal','verdura','verdura','carne','pescado','proteina_vegetal'];
+/* Categorías que aportan proteína (para dar preferencia blanda a la cena
+   por encima de platos que son solo verdura/fruta/cereal). */
+const PROTEIN_BEARING_CATEGORIES = ['carne','pescado','marisco','legumbre','proteina_vegetal','huevo','lacteo'];
+function shuffledCategoryOrder(){
+  const arr = COMIDA_WEEK_BUCKET.slice();
+  for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+  return arr;
+}
+
+/* Genera un plan para un conjunto de fechas (una semana o un mes, como
+   cadena de semanas ISO lunes-domingo). La comida (slot "comida") sigue
+   reglas de variedad y equilibrio nutricional más estrictas; el resto de
+   comidas usa una lógica más simple. Devuelve {days, skippedBuckets}. */
+async function generatePlan(dates, monthNum){
+  const skippedBuckets = [];
+  const dinersMap = await computeDinersForRange(dates);
+  let history = await loadPlanningHistory();
+  const dessertCandidates = state.recipes.filter(r=>r.role==='postre');
+  let recentDesserts = [];
+  const doComida = state.mealSlots.includes('comida');
+  const otherSlots = state.mealSlots.filter(s=>s!=='comida');
+
+  // Agrupar las fechas en semanas ISO (lunes-domingo), en orden.
+  const weekOrder = [];
+  const weekMap = new Map();
+  for(const d of dates){
+    const wk = isoWeekKey(d);
+    if(!weekMap.has(wk)){ weekMap.set(wk, []); weekOrder.push(wk); }
+    weekMap.get(wk).push(d);
+  }
+
+  const days = [];
+  for(const wk of weekOrder){
+    const weekDates = weekMap.get(wk);
+
+    // Descartar del historial las fechas de carne roja de hace más de 30 días.
+    const refDate = weekDates[0];
+    history.redMeatDates = (history.redMeatDates||[]).filter(dt=>{
+      const diff = (new Date(refDate+'T00:00:00') - new Date(dt+'T00:00:00')) / (24*3600*1000);
+      return diff <= 30;
+    });
+
+    const categoryOrder = doComida ? shuffledCategoryOrder() : [];
+    const usedComidaIds = [];
+    const usedOtherIds = {};
+    let pescadoTypesThisWeek = [];
+
+    for(let i=0;i<weekDates.length;i++){
+      const date = weekDates[i];
+      const monthOfDate = monthNum!=null ? monthNum : (new Date(date+'T00:00:00').getMonth()+1);
+      const meals = {};
+      const dayUsedIds = [];
+      let comidaCategoryForDay = null;
+
+      if(doComida){
+        const category = categoryOrder[i];
+        let candidates = state.recipes.filter(r=>(r.mealTypes||[]).includes('comida') && r.foodType===category && !usedComidaIds.includes(r.id));
+
+        if(!candidates.length){
+          // Sin recetas variadas de esa categoría esta semana: buscamos cualquier
+          // comida no repetida, y si tampoco hay, permitimos repetir como último recurso.
+          candidates = state.recipes.filter(r=>(r.mealTypes||[]).includes('comida') && !usedComidaIds.includes(r.id));
+          if(!candidates.length) candidates = state.recipes.filter(r=>(r.mealTypes||[]).includes('comida'));
+          if(candidates.length){
+            const catLabel = (FOOD_TYPES.find(f=>f.id===category)||{}).label || category;
+            skippedBuckets.push(`No había suficientes recetas de ${catLabel.toLowerCase()} variadas esta semana, así que se ha completado el menú con otra opción.`);
+          }
+        }
+
+        // Límite de carne roja: máximo ~2 veces en los últimos 30 días.
+        if(category==='carne' && candidates.length){
+          const redCount = (history.redMeatDates||[]).length;
+          if(redCount>=2){
+            const whiteOnly = candidates.filter(r=> classifyMeat(r)!=='roja');
+            if(whiteOnly.length) candidates = whiteOnly;
+            else console.warn('No hay recetas de carne blanca disponibles; se permite carne roja pese al límite mensual de 2 veces cada 30 días.');
+          }
+        }
+
+        // Variar entre pescado blanco y azul en las dos comidas de pescado de la semana.
+        if(category==='pescado' && candidates.length>1 && pescadoTypesThisWeek.length){
+          const lastType = pescadoTypesThisWeek[pescadoTypesThisWeek.length-1];
+          if(lastType){
+            const opposite = candidates.filter(r=> classifyFish(r) && classifyFish(r)!==lastType);
+            if(opposite.length) candidates = opposite;
+          }
+        }
+
+        const chosen = candidates.length ? pickRecipe(candidates, {
+          recentIds: usedComidaIds, monthNum: monthOfDate, preferWeight:'contundente', history, category,
+        }) : null;
+
+        if(chosen){
+          meals.comida = chosen.id;
+          usedComidaIds.push(chosen.id);
+          dayUsedIds.push(chosen.id);
+          comidaCategoryForDay = category;
+          if(chosen.mainIngredientDetail){
+            history.lastMainIngredientByCategory = history.lastMainIngredientByCategory || {};
+            history.lastMainIngredientByCategory[category] = chosen.mainIngredientDetail;
+          }
+          if(chosen.cookStyle){
+            history.lastCookStyleByCategory = history.lastCookStyleByCategory || {};
+            history.lastCookStyleByCategory[category] = chosen.cookStyle;
+          }
+          if(category==='carne' && classifyMeat(chosen)==='roja'){
+            history.redMeatDates = history.redMeatDates || [];
+            history.redMeatDates.push(date);
+          }
+          if(category==='pescado'){
+            pescadoTypesThisWeek.push(classifyFish(chosen));
+          }
+        } else {
+          meals.comida = null;
+          skippedBuckets.push(`No hay ninguna receta de comida disponible para el ${fmtDateHuman(date)}.`);
+        }
+      }
+
+      for(const slot of otherSlots){
+        usedOtherIds[slot] = usedOtherIds[slot] || [];
+        let candidates = state.recipes.filter(r=>(r.mealTypes||[]).includes(slot) && !usedOtherIds[slot].includes(r.id) && !dayUsedIds.includes(r.id));
+        if(!candidates.length) candidates = state.recipes.filter(r=>(r.mealTypes||[]).includes(slot) && !dayUsedIds.includes(r.id));
+        // La cena no repite, en el mismo día, el tipo de alimento de la comida
+        // (si eso deja el bucle vacío, volvemos al conjunto sin filtrar antes
+        // que dejar la cena sin asignar).
+        if(slot==='cena' && comidaCategoryForDay){
+          const filtered = candidates.filter(r=> r.foodType !== comidaCategoryForDay);
+          if(filtered.length) candidates = filtered;
+        }
+        const chosen = pickRecipe(candidates, {
+          recentIds: usedOtherIds[slot], monthNum: monthOfDate,
+          preferWeight: slot==='cena' ? 'ligero' : null, history,
+          preferProteinBearing: slot==='cena',
+        });
+        meals[slot] = chosen ? chosen.id : null;
+        if(chosen){ usedOtherIds[slot].push(chosen.id); dayUsedIds.push(chosen.id); }
+      }
+
+      const chosenDessert = pickRecipe(dessertCandidates, {recentIds: recentDesserts.slice(-3), monthNum: monthOfDate});
+      if(chosenDessert) recentDesserts.push(chosenDessert.id);
+
+      days.push({date, meals, dessert: chosenDessert?chosenDessert.id:null, diners: dinersMap[date]||0, comidaCategory: comidaCategoryForDay});
+    }
+
+    // Actualizamos el historial con lo elegido en esta semana antes de pasar a la siguiente.
+    const weekPicks = usedComidaIds.concat(...Object.values(usedOtherIds));
+    history.recentRecipeIds = (history.recentRecipeIds||[]).concat(weekPicks).slice(-20);
+    await savePlanningHistory(history);
+  }
+
+  // Regla especial de planificación mensual: un domingo con toda la familia
+  // en casa se reserva, si es posible, para pollo asado, y otro domingo
+  // distinto (también con todos en casa) para un arroz. Es un extra sobre
+  // el ciclo normal de categorías, y sólo se aplica al generar un mes
+  // (monthNum viene informado); nunca debe romper el resto del plan.
+  if(monthNum!=null && doComida){
+    try{
+      const fullyAttendedSundays = days.filter(d=>{
+        const dow = (new Date(d.date+'T00:00:00').getDay()+6)%7; // 6 = domingo
+        return dow===6 && state.family.length>0 && d.diners===state.family.length;
+      });
+      if(fullyAttendedSundays.length){
+        const polloIdx = Math.floor(Math.random()*fullyAttendedSundays.length);
+        const polloDay = fullyAttendedSundays[polloIdx];
+        const polloCandidates = state.recipes.filter(r=>{
+          if(r.foodType!=='carne') return false;
+          const text = stripAccents((r.name||'')+' '+(r.mainIngredientDetail||'')).toLowerCase();
+          return text.includes('pollo');
+        });
+        const polloAsado = polloCandidates.find(r=> stripAccents(r.name||'').toLowerCase().includes('asad'));
+        const polloChosen = polloAsado || polloCandidates[0] || null;
+        if(polloChosen){
+          polloDay.meals.comida = polloChosen.id;
+          polloDay.comidaCategory = 'carne';
+          polloDay._special = 'pollo_asado';
+        } else {
+          skippedBuckets.push('No he podido reservar el pollo asado de domingo: no tienes ninguna receta de pollo guardada.');
+        }
+
+        const remainingSundays = fullyAttendedSundays.filter((d,i)=> i!==polloIdx);
+        if(remainingSundays.length){
+          const arrozDay = remainingSundays[Math.floor(Math.random()*remainingSundays.length)];
+          const arrozCandidates = state.recipes.filter(r=>{
+            if(r.foodType!=='cereal') return false;
+            const text = stripAccents((r.name||'')+' '+(r.mainIngredientDetail||'')).toLowerCase();
+            return text.includes('arroz');
+          });
+          if(arrozCandidates.length){
+            const arrozChosen = arrozCandidates[Math.floor(Math.random()*arrozCandidates.length)];
+            arrozDay.meals.comida = arrozChosen.id;
+            arrozDay.comidaCategory = 'cereal';
+            arrozDay._special = 'arroz';
+          } else {
+            skippedBuckets.push('No tienes ninguna receta de arroz para asignar al domingo especial.');
+          }
+        }
+      } else {
+        skippedBuckets.push('No he podido reservar un domingo con toda la familia en casa para el pollo asado ni para el arroz especial este mes.');
+      }
+    }catch(e){ console.warn('regla especial de domingo (pollo asado / arroz) fallida', e); }
+  }
+
+  return { days, skippedBuckets: [...new Set(skippedBuckets)] };
+}
+
+function summarizePlate(days){
+  let veg=0, pro=0, carb=0, n=0;
+  for(const day of days){
+    for(const slot of Object.keys(day.meals)){
+      const rid = day.meals[slot];
+      if(!rid) continue;
+      const rec = state.recipes.find(r=>r.id===rid);
+      if(rec && rec.role==='plato_principal'){
+        veg+=rec.plate?.veg||0; pro+=rec.plate?.protein||0; carb+=rec.plate?.carbs||0; n++;
+      }
+    }
+  }
+  if(!n) return null;
+  return {veg:Math.round(veg/n), protein:Math.round(pro/n), carbs:Math.round(carb/n)};
+}
+
+/* Fila de una comida o del postre dentro de un día del plan: el nombre
+   es un botón que abre la receta, y el icono aparte permite cambiarla. */
+function mealRowHTML(day, field, slot){
+  const rid = field==='dessert' ? day.dessert : (day.meals||{})[slot];
+  const rec = rid ? state.recipes.find(r=>r.id===rid) : null;
+  const label = field==='dessert' ? 'Postre' : (MEAL_TYPES.find(m=>m.id===slot)?.label||slot);
+  // Cuando no hay nada asignado, el propio nombre "Sin asignar" también
+  // abre el selector (antes quedaba deshabilitado y sólo el icono de al
+  // lado servía para cambiarlo, lo que llevaba a pensar que no se podía
+  // tocar nada).
+  const nameBtn = rid
+    ? `<button type="button" class="recipe-link" data-viewrecipe="${rid}">${rec?esc(rec.name):'Receta no encontrada'}</button>`
+    : `<button type="button" class="recipe-link" data-pickmeal data-date="${day.date}" data-field="${field}" data-slot="${slot||''}">Sin asignar</button>`;
+  return `
+    <div class="meal-slot">
+      <div class="slot-name">${esc(label)}</div>
+      <div class="slot-body row" style="gap:8px">
+        ${field==='dessert' ? '' : (rec ? foodIconBadge(rec.foodType,22) : `<div class="plate-dot na" style="width:22px;height:22px"></div>`)}
+        ${nameBtn}
+        <button type="button" class="icon-btn" data-pickmeal data-date="${day.date}" data-field="${field}" data-slot="${slot||''}" aria-label="Cambiar ${esc(label.toLowerCase())}">
+          <svg viewBox="0 0 24 24"><path d="M4 7h11M11 3l4 4-4 4M20 17H9M13 21l-4-4 4-4"/></svg>
+        </button>
+      </div>
+    </div>`;
+}
+
+function fruitBasketHTML(dateISO){
+  const fruits = seasonalFruitsForDate(dateISO);
+  if(!fruits.length) return '';
+  return `
+    <div class="fruit-basket">
+      <div class="slot-name">Fruta</div>
+      <div class="row wrap" style="gap:6px">${fruits.map(f=>`<span class="chip static">${esc(f)}</span>`).join('')}</div>
+    </div>`;
+}
+
+function dayExtraHTML(day){
+  return `<div class="day-extra">${mealRowHTML(day,'dessert',null)}${fruitBasketHTML(day.date)}</div>`;
+}
+
+/* ---- Carga de planes ya guardados (para no forzar "Generar" cada vez que
+   se navega a otra semana/mes, o simplemente se reabre la pestaña) ---- */
+async function loadWeekPlan(weekStart){
+  if(!state.db) return null;
+  try{
+    const snap = await state.db.doc('plans_semana/'+isoWeekKey(weekStart)).get();
+    if(snap.exists){
+      const data = snap.data();
+      if(data && data.weekStart===weekStart && Array.isArray(data.days)) return data.days;
+    }
+  }catch(e){ console.warn('No se pudo cargar el plan semanal guardado', e); }
+  return null;
+}
+async function loadMonthPlan(mk){
+  if(!state.db) return null;
+  try{
+    const snap = await state.db.doc('plans_mes/'+mk).get();
+    if(snap.exists){
+      const data = snap.data();
+      if(data && data.month===mk && Array.isArray(data.days)) return data.days;
+    }
+  }catch(e){ console.warn('No se pudo cargar el plan mensual guardado', e); }
+  return null;
+}
+// Recuerda qué semanas/meses ya se han intentado cargar, para no repetir la
+// consulta en cada repintado mientras se navega por la pestaña Plan.
+const _planLoadAttempts = new Set();
+function ensureWeekPlanLoaded(){
+  if(state.currentWeekPlan) return;
+  const ws = state.weekStart;
+  const key = 'w:'+ws;
+  if(_planLoadAttempts.has(key)) return;
+  _planLoadAttempts.add(key);
+  loadWeekPlan(ws).then(days=>{
+    if(days && state.weekStart===ws && state.planView==='semanal' && state.tab==='plan' && !state.currentWeekPlan){
+      state.currentWeekPlan = days;
+      renderMain();
+    }
+  });
+}
+function ensureMonthPlanLoaded(){
+  if(state.currentMonthPlan) return;
+  const mk = state.monthCursor;
+  const key = 'm:'+mk;
+  if(_planLoadAttempts.has(key)) return;
+  _planLoadAttempts.add(key);
+  loadMonthPlan(mk).then(days=>{
+    if(days && state.monthCursor===mk && state.planView==='mensual' && state.tab==='plan' && !state.currentMonthPlan){
+      state.currentMonthPlan = days;
+      renderMain();
+    }
+  });
+}
+
+async function persistCurrentPlan(){
+  if(!state.db) return;
+  try{
+    if(state.planView==='semanal' && state.currentWeekPlan){
+      await state.db.doc('plans_semana/'+isoWeekKey(state.weekStart)).set({weekStart:state.weekStart, days:state.currentWeekPlan, updatedAt:Date.now()});
+    } else if(state.planView==='mensual' && state.currentMonthPlan){
+      await state.db.doc('plans_mes/'+state.monthCursor).set({month:state.monthCursor, days:state.currentMonthPlan, updatedAt:Date.now()});
+    }
+  }catch(e){ console.warn(e); }
+}
+
+/* Hoja para elegir qué receta ocupa una comida o el postre de un día.
+   onDone, si se pasa, sustituye al cierre-y-repintado por defecto (lo usa
+   la ficha de detalle del día para volver a dibujarse a sí misma). */
+function openMealPickerSheet(day, field, slot, onDone){
+  // Si esta comida se asignó siguiendo el ciclo de categorías (día de
+  // legumbre, de pescado…) y estamos cambiando ese mismo slot "comida",
+  // ofrecemos por defecto sólo recetas de esa misma categoría. Para el
+  // resto de comidas, o si no hay categoría registrada (planes antiguos),
+  // se muestra la lista sin restringir, como siempre.
+  const restrictCategory = (slot==='comida' && day.comidaCategory) ? day.comidaCategory : null;
+  const candidates = (field==='dessert'
+    ? state.recipes.filter(r=>r.role==='postre')
+    : state.recipes.filter(r=>(r.mealTypes||[]).includes(slot) && (!restrictCategory || r.foodType===restrictCategory))
+  ).sort((a,b)=> (a.name||'').localeCompare(b.name||'', 'es'));
+  const currentId = field==='dessert' ? day.dessert : (day.meals||{})[slot];
+  const label = field==='dessert' ? 'postre' : (MEAL_TYPES.find(m=>m.id===slot)?.label||slot).toLowerCase();
+  const categoryLabel = restrictCategory ? ((FOOD_TYPES.find(f=>f.id===restrictCategory)||{}).label||restrictCategory) : null;
+  const heading = categoryLabel ? `Elegir ${label} · ${categoryLabel}` : `Elegir ${label}`;
+  const rows = [`<button type="button" class="pick-row" data-pickval="">— Sin asignar —${!currentId?' <span class="check">✓</span>':''}</button>`]
+    .concat(candidates.map(o=>`<button type="button" class="pick-row" data-pickval="${o.id}">${esc(o.name)}${o.id===currentId?' <span class="check">✓</span>':''}</button>`));
+  openSheet(`
+    <div class="sheet-handle"></div>
+    <h2>${esc(heading)}</h2>
+    ${categoryLabel ? `<p class="hint">Te propongo otras recetas de ${esc(categoryLabel.toLowerCase())}, para no romper el equilibrio de la semana.</p>` : ''}
+    ${!candidates.length ? `<p class="hint">Todavía no tienes ninguna receta que encaje aquí. Añádela primero en Recetas y luego podrás asignarla.</p>` : ''}
+    <div class="stack" style="gap:2px">${rows.join('')}</div>
+  `, (host)=>{
+    $all('[data-pickval]', host).forEach(b=> b.addEventListener('click', async ()=>{
+      const val = b.dataset.pickval || null;
+      if(field==='dessert') day.dessert = val; else { day.meals = day.meals||{}; day.meals[slot] = val; }
+      await persistCurrentPlan();
+      if(onDone) onDone(); else { closeSheet(); renderMain(); }
+    }));
+  });
+}
+
+function renderWeekBody(){
+  ensureWeekPlanLoaded();
+  const weekEnd = addDays(state.weekStart,6);
+  const dates = Array.from({length:7},(_,i)=>addDays(state.weekStart,i));
+  const plan = state.currentWeekPlan;
+  const summary = plan ? summarizePlate(plan) : null;
+
+  const daysHTML = plan ? plan.map(day=>{
+    const slotsHTML = state.mealSlots.map(slot=> mealRowHTML(day,'meal',slot)).join('');
+    return `
+      <div class="card day-card">
+        <div class="day-head">
+          <span class="dow">${fmtDateHuman(day.date)}</span>
+          <span class="diners num">${day.diners} comensal${day.diners===1?'':'es'}</span>
+        </div>
+        ${slotsHTML || '<p class="hint">Elige al menos un tipo de comida a planificar arriba.</p>'}
+        ${dayExtraHTML(day)}
+      </div>`;
+  }).join('') : '';
+
+  return `
+    <div class="stack">
+      <div class="nav-row">
+        <button class="btn btn-ghost btn-sm" id="prevWeek">‹ Anterior</button>
+        <span class="navlabel">${fmtDateHuman(state.weekStart)} – ${fmtDateHuman(weekEnd)}</span>
+        <button class="btn btn-ghost btn-sm" id="nextWeek">Siguiente ›</button>
+      </div>
+      <div>
+        <label class="field-label">Comidas a planificar</label>
+        ${mealSlotGridHTML()}
+      </div>
+      <button class="btn btn-primary btn-block" id="genWeekBtn">${plan?'Regenerar semana':'Generar planificación semanal'}</button>
+      ${summary ? `
+        <div class="card" style="background:var(--surface-2);border:none">
+          <div class="row between">
+            <span class="field-label" style="margin:0">Media de la semana</span>
+            ${plateDot(summary, 30)}
+          </div>
+          <div class="row wrap" style="gap:6px;margin-top:8px">
+            <span class="badge veg">Verduras ${summary.veg}%</span>
+            <span class="badge protein">Proteína ${summary.protein}%</span>
+            <span class="badge carb">Hidratos ${summary.carbs}%</span>
+          </div>
+        </div>` : ''}
+      <div class="stack">${daysHTML}</div>
+      ${whoCardHTML()}
+      ${agendaSummaryHTML(dates)}
+    </div>
+  `;
+}
+
+function renderMonthBody(){
+  ensureMonthPlanLoaded();
+  const [y,m] = state.monthCursor.split('-').map(Number);
+  const firstOfMonth = `${state.monthCursor}-01`;
+  const firstDow = (new Date(firstOfMonth+'T00:00:00').getDay()+6)%7;
+  const daysInMonth = new Date(y, m, 0).getDate();
+  const plan = state.currentMonthPlan; // array of {date, meals, dessert, diners}
+  const planByDate = {};
+  if(plan) plan.forEach(d=> planByDate[d.date]=d);
+  const summary = plan ? summarizePlate(plan) : null;
+
+  const cells = [];
+  for(let i=0;i<firstDow;i++) cells.push(`<div class="month-cell faded"></div>`);
+  for(let day=1; day<=daysInMonth; day++){
+    const dateISO = `${state.monthCursor}-${String(day).padStart(2,'0')}`;
+    const d = planByDate[dateISO];
+    let mealLabel = '';
+    if(d){
+      const mainSlot = state.mealSlots.includes('comida') ? 'comida' : state.mealSlots[0];
+      const rid = mainSlot ? d.meals[mainSlot] : null;
+      const rec = rid ? state.recipes.find(r=>r.id===rid) : null;
+      mealLabel = rec ? rec.name : '';
+    }
+    cells.push(`<div class="month-cell" data-monthday="${dateISO}"><span class="dnum num">${day}</span><span class="dmeal">${esc(mealLabel)}</span></div>`);
+  }
+
+  return `
+    <div class="stack">
+      <div class="nav-row">
+        <button class="btn btn-ghost btn-sm" id="prevMonth">‹</button>
+        <span class="navlabel">${monthLabel(state.monthCursor)}</span>
+        <button class="btn btn-ghost btn-sm" id="nextMonth">›</button>
+      </div>
+      <div>
+        <label class="field-label">Comidas a planificar</label>
+        ${mealSlotGridHTML()}
+      </div>
+      <button class="btn btn-primary btn-block" id="genMonthBtn">${plan?'Regenerar mes':'Generar planificación mensual'}</button>
+      ${summary ? `
+        <div class="card" style="background:var(--surface-2);border:none">
+          <div class="row between">
+            <span class="field-label" style="margin:0">Media del mes</span>
+            ${plateDot(summary, 30)}
+          </div>
+          <div class="row wrap" style="gap:6px;margin-top:8px">
+            <span class="badge veg">Verduras ${summary.veg}%</span>
+            <span class="badge protein">Proteína ${summary.protein}%</span>
+            <span class="badge carb">Hidratos ${summary.carbs}%</span>
+          </div>
+        </div>` : ''}
+      <div class="month-grid">
+        ${WEEKDAYS.map(w=>`<div class="month-dow-label">${w}</div>`).join('')}
+        ${cells.join('')}
+      </div>
+      ${whoCardHTML()}
+      ${agendaSummaryHTML(Array.from({length:daysInMonth},(_,i)=>`${state.monthCursor}-${String(i+1).padStart(2,'0')}`))}
+    </div>
+  `;
+}
+
+function wirePlanEvents(){
+  $all('[data-planview]').forEach(b=> b.addEventListener('click', ()=>{ state.planView = b.dataset.planview; renderMain(); }));
+  $all('[data-slotchip]').forEach(b=> b.addEventListener('click', ()=>{
+    const id = b.dataset.slotchip; const i = state.mealSlots.indexOf(id);
+    if(i>-1) state.mealSlots.splice(i,1); else state.mealSlots.push(id);
+    renderMain();
+  }));
+  $all('[data-viewrecipe]').forEach(b=> b.addEventListener('click', ()=>{
+    if(b.dataset.viewrecipe) openRecipeSheet(b.dataset.viewrecipe);
+  }));
+  $all('[data-pickmeal]').forEach(b=> b.addEventListener('click', ()=>{
+    const date = b.dataset.date, field = b.dataset.field, slot = b.dataset.slot||null;
+    const plan = state.planView==='semanal' ? state.currentWeekPlan : state.currentMonthPlan;
+    const day = plan?.find(d=>d.date===date);
+    if(day) openMealPickerSheet(day, field, slot);
+  }));
+  if(state.planView==='semanal'){
+    $('#prevWeek')?.addEventListener('click', ()=>{ state.weekStart = addDays(state.weekStart,-7); state.currentWeekPlan=null; renderMain(); });
+    $('#nextWeek')?.addEventListener('click', ()=>{ state.weekStart = addDays(state.weekStart,7); state.currentWeekPlan=null; renderMain(); });
+    $('#genWeekBtn')?.addEventListener('click', async ()=>{
+      if(!state.mealSlots.length){ toast('Elige al menos un tipo de comida'); return; }
+      if(!state.family.length){ toast('Añade primero tu familia en la pestaña Familia para calcular comensales'); }
+      const dates = Array.from({length:7},(_,i)=>addDays(state.weekStart,i));
+      const btn = $('#genWeekBtn'); btn.disabled=true; btn.textContent='Generando…';
+      const result = await generatePlan(dates);
+      state.currentWeekPlan = result.days;
+      await persistCurrentPlan();
+      renderMain();
+      if(result.skippedBuckets && result.skippedBuckets.length) toast(result.skippedBuckets[0]);
+    });
+  } else {
+    $('#prevMonth')?.addEventListener('click', ()=>{
+      const [y,m]=state.monthCursor.split('-').map(Number);
+      const d=new Date(y,m-2,1); state.monthCursor=monthKey(todayISO(d)); state.currentMonthPlan=null; renderMain();
+    });
+    $('#nextMonth')?.addEventListener('click', ()=>{
+      const [y,m]=state.monthCursor.split('-').map(Number);
+      const d=new Date(y,m,1); state.monthCursor=monthKey(todayISO(d)); state.currentMonthPlan=null; renderMain();
+    });
+    $('#genMonthBtn')?.addEventListener('click', async ()=>{
+      if(!state.mealSlots.length){ toast('Elige al menos un tipo de comida'); return; }
+      const [y,m] = state.monthCursor.split('-').map(Number);
+      const daysInMonth = new Date(y,m,0).getDate();
+      const dates = Array.from({length:daysInMonth},(_,i)=>`${state.monthCursor}-${String(i+1).padStart(2,'0')}`);
+      const btn = $('#genMonthBtn'); btn.disabled=true; btn.textContent='Generando…';
+      const result = await generatePlan(dates, m);
+      state.currentMonthPlan = result.days;
+      await persistCurrentPlan();
+      renderMain();
+      if(result.skippedBuckets && result.skippedBuckets.length) toast(result.skippedBuckets[0]);
+    });
+    $all('[data-monthday]').forEach(cell=> cell.addEventListener('click', ()=>{
+      const dateISO = cell.dataset.monthday;
+      const d = state.currentMonthPlan?.find(x=>x.date===dateISO);
+      if(d) openDayDetailSheet(d);
+    }));
+  }
+}
+
+function openDayDetailSheet(day){
+  function draw(){
+    const slotsHTML = state.mealSlots.map(slot=> mealRowHTML(day,'meal',slot)).join('');
+    openSheet(`
+      <div class="sheet-handle"></div>
+      <h2>${fmtDateHuman(day.date)}</h2>
+      <p class="hint">${day.diners} comensal${day.diners===1?'':'es'} en casa ese día</p>
+      <div class="stack">${slotsHTML || '<p class="hint">No hay comidas planificadas para este día.</p>'}</div>
+      ${dayExtraHTML(day)}
+    `, (host)=>{
+      $all('[data-viewrecipe]', host).forEach(b=> b.addEventListener('click', ()=>{
+        if(b.dataset.viewrecipe) openRecipeSheet(b.dataset.viewrecipe);
+      }));
+      $all('[data-pickmeal]', host).forEach(b=> b.addEventListener('click', ()=>{
+        const field = b.dataset.field, slot = b.dataset.slot||null;
+        openMealPickerSheet(day, field, slot, ()=>{ draw(); renderMain(); });
+      }));
+    });
+  }
+  draw();
+}
+
+/* =======================================================================
+   TAB: COMPRA
+======================================================================= */
+/* Capitaliza la primera letra de un texto (para mostrar bien los nombres
+   de producto que llegan en minúsculas del dictado o de la IA). */
+function capitalizeFirst(s){
+  s = String(s||'').trim();
+  if(!s) return s;
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+/* Adivina la categoría de un producto de la compra reutilizando las mismas
+   listas de palabras clave que guessFoodType, para que funcione igual de
+   bien sin conexión a la IA. */
+function guessGroceryCategory(name){
+  const text = stripAccents(name).toLowerCase();
+  for(const cat of Object.keys(FOOD_TYPE_KEYWORDS)){
+    for(const kw of FOOD_TYPE_KEYWORDS[cat]){
+      if(text.includes(kw)) return cat;
+    }
+  }
+  return 'otro';
+}
+/* Quita, en bucle, las palabras de relleno típicas de un dictado ("compra",
+   "necesito", "y", "también"…) del principio de un fragmento de texto. */
+function stripShoppingFiller(frag){
+  let prev;
+  do{
+    prev = frag;
+    frag = frag.replace(/^(y|también|tambien)\s+/i,'').trim();
+    frag = frag.replace(/^(compra|comprar|necesito|necesitamos|añade|anade|añadir|anadir|dame|pon|apunta|apuntar|quiero|coge|coger)\s+/i,'').trim();
+  }while(frag!==prev && frag);
+  return frag;
+}
+/* Reparto de texto en productos individuales sin ayuda de la IA: separa por
+   comas, saltos de línea o la palabra "y", y limpia cada fragmento. */
+function parseShoppingTextFallback(text){
+  const fragments = String(text||'').split(/,|\n| y /i).map(f=>f.trim()).filter(Boolean);
+  const seen = new Set();
+  const out = [];
+  for(let frag of fragments){
+    frag = stripShoppingFiller(frag);
+    if(!frag) continue;
+    const key = stripAccents(frag).toLowerCase();
+    if(seen.has(key)) continue;
+    seen.add(key);
+    out.push({ name: capitalizeFirst(frag), category: guessGroceryCategory(frag) });
+  }
+  return out;
+}
+/* Convierte un texto (escrito o dictado, que puede describir uno o varios
+   productos a la vez) en una lista de {name, category}. Usa la IA cuando
+   está disponible, para separar bien frases naturales tipo "compra
+   chocolate, garbanzos y fideos"; si no, recurre al reparto manual. */
+async function parseShoppingText(text){
+  text = String(text||'').trim();
+  if(!text) return [];
+  if(state.sample){
+    const prompt = `Eres un chef y nutricionista ayudando a preparar una lista de la compra. A partir de este texto, dictado o escrito de viva voz por el usuario en español, identifica cada producto por separado, ignorando palabras de relleno como "compra", "necesito", "añade", "también", "y", las comas, etc.
+
+Texto: """${text}"""
+
+Devuelve SOLO un array JSON, sin texto adicional ni explicación, con este formato exacto:
+[{"name": string, "category": string}]
+
+Reglas: "name" es el nombre del producto, con la primera letra en mayúscula (ej. "Chocolate", "Garbanzos", "Fideos"). "category" debe ser exactamente uno de estos valores: "carne","pescado","marisco","legumbre","proteina_vegetal","huevo","lacteo","cereal","verdura","fruta","otro". Usa "verdura" o "fruta" para frutas y verduras frescas, "legumbre" para legumbres, "lacteo" para lácteos y derivados, "huevo" para huevos, y "otro" para cualquier producto que no sea de alimentación (limpieza, higiene, etc.) o que no encaje en ninguna categoría. Si el texto describe varios productos, aunque estén en la misma frase, devuélvelos todos como elementos separados del array: nunca los agrupes en un único elemento.`;
+    try{
+      const data = await state.sample.json(prompt, {modelTier:'default'});
+      const list = Array.isArray(data) ? data : (Array.isArray(data?.items) ? data.items : []);
+      const out = list.map(x=>({
+        name: capitalizeFirst(String(x?.name||'').trim()),
+        category: FOOD_TYPES.some(f=>f.id===x?.category) ? x.category : guessGroceryCategory(String(x?.name||'')),
+      })).filter(x=>x.name);
+      if(out.length) return out;
+    }catch(e){ console.warn('parseShoppingText sample error', e); }
+  }
+  return parseShoppingTextFallback(text);
+}
+
+async function addShoppingItems(items){
+  if(!items || !items.length) return;
+  if(!state.db){ toast('No hay conexión con la base de datos, así que no he podido guardar la compra.'); return; }
+  try{
+    for(const it of items){
+      await state.db.collection('shopping').add({name:it.name, category: FOOD_TYPES.some(f=>f.id===it.category)?it.category:'otro', checked:false, createdAt:Date.now()});
+    }
+    toast(items.length>1 ? `Se han añadido ${items.length} productos a la compra` : 'Producto añadido a la compra');
+  }catch(e){ console.warn(e); toast('No he podido guardar la compra'); }
+}
+async function toggleShoppingItem(item){
+  if(!state.db) return;
+  try{ await state.db.doc('shopping/'+item.id).update({checked: !item.checked}); }
+  catch(e){ console.warn(e); toast('No he podido actualizar este producto'); }
+}
+async function deleteShoppingItem(id){
+  if(!state.db) return;
+  try{ await state.db.doc('shopping/'+id).delete(); toast('Producto eliminado de la compra'); }
+  catch(e){ console.warn(e); toast('No he podido eliminar el producto'); }
+}
+
+/* ---- Dictado por voz de la lista de la compra (Web Speech API) ---- */
+let shoppingRecognition = null;
+let shoppingListening = false;
+let shoppingTranscriptAcc = '';
+
+function updateShoppingMicUI(){
+  const btn = $('#shopMicBtn');
+  if(btn) btn.classList.toggle('listening', shoppingListening);
+}
+function startShoppingMic(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){ toast('Este teléfono no admite el dictado por voz.'); return; }
+  try{
+    shoppingRecognition = new SR();
+    shoppingRecognition.lang = 'es-ES';
+    shoppingRecognition.continuous = true;
+    shoppingRecognition.interimResults = true;
+    shoppingTranscriptAcc = '';
+    shoppingRecognition.onresult = (event)=>{
+      let finalChunk = '';
+      for(let i=event.resultIndex; i<event.results.length; i++){
+        if(event.results[i].isFinal) finalChunk += event.results[i][0].transcript + ' ';
+      }
+      if(finalChunk) shoppingTranscriptAcc += finalChunk;
+    };
+    shoppingRecognition.onerror = (event)=>{
+      console.warn('speech recognition error', event.error);
+      if(event.error==='not-allowed' || event.error==='service-not-allowed'){
+        toast('No he podido usar el micrófono; revisa los permisos en el navegador.');
+      }
+    };
+    shoppingRecognition.onend = async ()=>{
+      const wasListening = shoppingListening;
+      shoppingListening = false;
+      updateShoppingMicUI();
+      const transcript = shoppingTranscriptAcc.trim();
+      shoppingTranscriptAcc = '';
+      if(wasListening && transcript){
+        const items = await parseShoppingText(transcript);
+        if(items.length) await addShoppingItems(items);
+        else toast('No he identificado ningún producto en el dictado');
+      }
+    };
+    shoppingRecognition.start();
+    shoppingListening = true;
+    updateShoppingMicUI();
+  }catch(e){
+    console.warn('mic start error', e);
+    toast('No se ha podido iniciar el dictado.');
+    shoppingListening = false;
+    updateShoppingMicUI();
+  }
+}
+function stopShoppingMic(){
+  try{ shoppingRecognition && shoppingRecognition.stop(); }catch(e){}
+}
+function toggleShoppingMic(){
+  if(shoppingListening) stopShoppingMic(); else startShoppingMic();
+}
+
+function shopRowHTML(item){
+  return `
+    <div class="shop-row ${item.checked?'checked':''}" data-shopid="${item.id}">
+      <button type="button" class="shop-check ${item.checked?'on':''}" data-shoptoggle="${item.id}" aria-label="${item.checked?'Marcar como pendiente':'Marcar como comprado'}">${item.checked?'✓':''}</button>
+      <span class="shop-name">${esc(item.name)}</span>
+      <button type="button" class="row-remove" data-shopdelete="${item.id}" aria-label="Quitar de la lista">×</button>
+    </div>`;
+}
+function shopGroupsHTML(list){
+  const byCat = {};
+  list.forEach(i=>{ const c = FOOD_TYPES.some(f=>f.id===i.category)?i.category:'otro'; (byCat[c]=byCat[c]||[]).push(i); });
+  return FOOD_TYPES.map(ft=>{
+    const group = byCat[ft.id];
+    if(!group || !group.length) return '';
+    group.sort((a,b)=> (a.name||'').localeCompare(b.name||'','es'));
+    return `
+      <div class="shop-group">
+        <div class="shop-group-head"><span class="shop-group-icon" style="color:var(--food-${ft.id})">${foodTypeIcon(ft.id,16)}</span> ${esc(ft.label)} · ${group.length}</div>
+        ${group.map(shopRowHTML).join('')}
+      </div>`;
+  }).join('');
+}
+function shoppingAddHTML(){
+  const micSupported = ('SpeechRecognition' in window) || ('webkitSpeechRecognition' in window);
+  return `
+    <div class="card shopping-add">
+      <label class="field-label">Añadir a la compra</label>
+      <div class="row">
+        <input type="text" id="shopInput" placeholder="Ej. compra chocolate, garbanzos y fideos…" style="flex:1">
+        ${micSupported ? `
+        <button type="button" class="mic-btn ${shoppingListening?'listening':''}" id="shopMicBtn" aria-label="${shoppingListening?'Detener dictado':'Dictar productos'}">
+          <svg viewBox="0 0 24 24"><path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Z"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4M9 21h6"/></svg>
+        </button>` : ''}
+      </div>
+      <p class="hint">Puedes escribir o dictar varios productos seguidos, separados por comas o por "y" — por ejemplo "compra chocolate, garbanzos y fideos" — y yo los separo y categorizo.${!micSupported?' Este teléfono no admite el dictado por voz.':''}</p>
+      <button type="button" class="btn btn-primary btn-sm" id="shopAddBtn">Añadir</button>
+    </div>`;
+}
+
+function renderCompra(){
+  const items = state.shoppingList || [];
+  if(!items.length){
+    return `
+      <div class="stack">
+        ${shoppingAddHTML()}
+        <div class="empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6.2"/><circle cx="9.5" cy="20.5" r="1.3"/><circle cx="17" cy="20.5" r="1.3"/></svg>
+          <p>Todavía no has apuntado nada en la lista de la compra. Escribe o dicta lo que necesites — puedes decir varios productos seguidos, por ejemplo "compra chocolate, garbanzos y fideos" — y yo los separo y los ordeno por categorías.</p>
+        </div>
+      </div>`;
+  }
+  const pending = items.filter(i=>!i.checked);
+  const bought = items.filter(i=>i.checked);
+  return `
+    <div class="stack">
+      ${shoppingAddHTML()}
+      <div class="stack tight" id="shopPending">${pending.length ? shopGroupsHTML(pending) : '<p class="hint">Todo comprado por ahora — ¡buen trabajo!</p>'}</div>
+      ${bought.length ? `
+        <div>
+          <button type="button" class="shop-bought-toggle" id="shopBoughtToggle">Comprado (${bought.length}) ▾</button>
+          <div class="stack tight" id="shopBoughtList" hidden>${shopGroupsHTML(bought)}</div>
+        </div>` : ''}
+    </div>`;
+}
+
+function wireCompraEvents(){
+  const input = $('#shopInput');
+  const addBtn = $('#shopAddBtn');
+  async function submitInput(){
+    if(!input) return;
+    const text = input.value.trim();
+    if(!text){ toast('Escribe o dicta antes algún producto'); return; }
+    addBtn.disabled = true; addBtn.textContent = 'Añadiendo…';
+    const items = await parseShoppingText(text);
+    addBtn.disabled = false; addBtn.textContent = 'Añadir';
+    if(!items.length){ toast('No he identificado ningún producto en ese texto'); return; }
+    input.value = '';
+    await addShoppingItems(items);
+  }
+  if(addBtn) addBtn.addEventListener('click', submitInput);
+  if(input) input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); submitInput(); } });
+
+  const micBtn = $('#shopMicBtn');
+  if(micBtn) micBtn.addEventListener('click', toggleShoppingMic);
+
+  $all('[data-shoptoggle]').forEach(b=> b.addEventListener('click', ()=>{
+    const item = state.shoppingList.find(i=>i.id===b.dataset.shoptoggle);
+    if(item) toggleShoppingItem(item);
+  }));
+  $all('[data-shopdelete]').forEach(b=> b.addEventListener('click', ()=> deleteShoppingItem(b.dataset.shopdelete)));
+  const boughtToggle = $('#shopBoughtToggle');
+  if(boughtToggle) boughtToggle.addEventListener('click', ()=>{
+    const list = $('#shopBoughtList');
+    if(list) list.hidden = !list.hidden;
+  });
+}
+
+/* =======================================================================
+   TAB: FAMILIA
+======================================================================= */
+function currentFamiliaMember(){
+  if((!state.familiaMemberId || !state.family.some(m=>m.id===state.familiaMemberId)) && state.family.length){
+    state.familiaMemberId = state.family[0].id;
+  }
+  return state.familiaMemberId;
+}
+
+function renderFamilia(){
+  if(!state.familiaLocationLoaded && state.db){
+    state.familiaLocationLoaded = true; // evita repetir la consulta en cada repintado
+    state.db.doc('settings/family').get().then(snap=>{
+      if(snap.exists){
+        state.familiaLocation = (snap.data()||{}).location || '';
+        if(state.tab==='familia') renderMain();
+      }
+    }).catch(e=> console.warn('No se pudo cargar la configuración de familia', e));
+  }
+  const familyHTML = state.family.length ? state.family.map(m=>`
+    <div class="member-row">
+      <span>${esc(m.name)}</span>
+      <button class="btn btn-ghost btn-sm" data-removemember="${m.id}">Quitar</button>
+    </div>`).join('') : '<p class="hint">Todavía no hay nadie en la familia. Añade aquí a cada persona que suele comer en casa; en cuanto lo hagas, la aplicación contará con todos ellos a la hora de calcular cuántas raciones preparar cada día.</p>';
+
+  const memberId = currentFamiliaMember();
+  const memberChips = state.family.map(m=>`<button type="button" class="chip ${m.id===memberId?'on':''}" data-famchip="${m.id}">${esc(m.name)}</button>`).join('');
+  const reasonChips = AWAY_REASONS.map(r=>`<button type="button" class="chip ${state.familiaReason===r.id?'on':''}" data-reasonchip="${r.id}">${esc(r.label)}</button>`).join('');
+
+  return `
+    <div class="stack">
+      <div class="card">
+        <h2>Configuración</h2>
+        <label class="field-label">Dónde vivimos</label>
+        <input type="text" id="famLocation" placeholder="Murcia, España" value="${esc(state.familiaLocation||'')}">
+        <p class="hint">Escríbelo una sola vez: no hay acceso a internet desde aquí para detectarlo automáticamente, pero puede servir más adelante para ajustar mejor qué fruta o verdura está de temporada donde vives.</p>
+        <button type="button" class="btn btn-primary btn-sm" id="saveFamilyConfigBtn" style="margin-top:8px">Guardar configuración</button>
+      </div>
+
+      <div class="card">
+        <h2>Quién forma la familia</h2>
+        <p class="hint">Por defecto se entiende que toda la familia come en casa todos los días, así que no hace falta marcar nada para eso. Añade aquí a cada persona del hogar; abajo podrás marcar sus ausencias en un calendario.</p>
+        <div id="familyList" style="margin-top:12px">${familyHTML}</div>
+        <div class="row" style="margin-top:14px;gap:8px">
+          <input type="text" id="newMemberName" placeholder="Nombre de la persona">
+          <button class="btn btn-primary" id="addMemberBtn">Añadir</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Días fuera de casa</h2>
+        <p class="hint">Elige a la persona y el motivo, y después toca directamente los días del calendario en los que no va a comer en casa. Vuelve a tocar un día ya marcado para quitarlo. Todo lo que no marques se sigue contando como que esa persona come en casa con normalidad.</p>
+        ${state.family.length ? `
+          <label class="field-label" style="margin-top:14px">Persona</label>
+          <div class="row wrap center" style="gap:8px">${memberChips}</div>
+          <label class="field-label" style="margin-top:14px">Motivo de la ausencia que vas a marcar</label>
+          <div class="row wrap center" style="gap:8px">${reasonChips}</div>
+          <div id="famCalendar" style="margin-top:16px"></div>
+        ` : '<p class="hint">Añade primero a alguien de la familia arriba; en cuanto lo hagas podrás marcar aquí sus días fuera de casa.</p>'}
+      </div>
+    </div>
+  `;
+}
+
+function familiaMonthDates(mk){
+  const [y,m] = mk.split('-').map(Number);
+  const firstDow = (new Date(mk+'-01T00:00:00').getDay()+6)%7;
+  const daysInMonth = new Date(y,m,0).getDate();
+  const dates = [];
+  for(let i=0;i<firstDow;i++) dates.push(null);
+  for(let d=1; d<=daysInMonth; d++) dates.push(`${mk}-${String(d).padStart(2,'0')}`);
+  return dates;
+}
+
+async function renderFamiliaCalendar(){
+  const host = $('#famCalendar');
+  if(!host) return;
+  const mk = state.familiaMonthCursor;
+  const memberId = state.familiaMemberId;
+  host.innerHTML = `
+    <div class="nav-row">
+      <button class="btn btn-ghost btn-sm" id="famPrevMonth">‹</button>
+      <span class="navlabel">${monthLabel(mk)}</span>
+      <button class="btn btn-ghost btn-sm" id="famNextMonth">›</button>
+    </div>
+    <div class="cal-legend" style="margin:10px 0"><span class="dot" style="background:var(--protein)"></span><span class="hint">Fuera de casa</span></div>
+    <div class="month-grid" id="famMonthGrid">
+      ${WEEKDAYS.map(w=>`<div class="month-dow-label">${w}</div>`).join('')}
+      <div class="thinking" style="grid-column:1/-1"><span class="spinner"></span> Cargando calendario…</div>
+    </div>
+  `;
+  $('#famPrevMonth').addEventListener('click', ()=>{
+    const [y,m]=mk.split('-').map(Number); const d=new Date(y,m-2,1);
+    state.familiaMonthCursor = monthKey(todayISO(d)); renderFamiliaCalendar();
+  });
+  $('#famNextMonth').addEventListener('click', ()=>{
+    const [y,m]=mk.split('-').map(Number); const d=new Date(y,m,1);
+    state.familiaMonthCursor = monthKey(todayISO(d)); renderFamiliaCalendar();
+  });
+
+  const dates = familiaMonthDates(mk);
+  const real = dates.filter(Boolean);
+  await Promise.all(real.map(d=>getAttendance(d)));
+
+  const grid = $('#famMonthGrid');
+  grid.innerHTML = WEEKDAYS.map(w=>`<div class="month-dow-label">${w}</div>`).join('') + dates.map(dateISO=>{
+    if(!dateISO) return `<div class="month-cell faded"></div>`;
+    const att = state.attendanceCache[dateISO] || {away:[]};
+    const isAway = (att.away||[]).some(a=>a.memberId===memberId);
+    const dayNum = parseInt(dateISO.slice(-2),10);
+    return `<div class="month-cell${isAway?' away-cell':''}" data-famday="${dateISO}"><span class="dnum num">${dayNum}</span></div>`;
+  }).join('');
+
+  $all('[data-famday]', grid).forEach(cell=> cell.addEventListener('click', async ()=>{
+    const dateISO = cell.dataset.famday;
+    const member = state.family.find(m=>m.id===memberId);
+    const att = await getAttendanceFresh(dateISO);
+    const already = (att.away||[]).some(a=>a.memberId===memberId);
+    const away = (att.away||[]).filter(a=>a.memberId!==memberId);
+    if(!already) away.push({memberId, name:member?.name||'', reason:state.familiaReason});
+    cell.classList.toggle('away-cell', !already);
+    await setAttendance(dateISO, away, true);
+  }));
+}
+
+function wireFamiliaEvents(){
+  const saveConfigBtn = $('#saveFamilyConfigBtn');
+  if(saveConfigBtn) saveConfigBtn.addEventListener('click', async ()=>{
+    const val = $('#famLocation').value.trim();
+    if(!state.db){ toast('No hay conexión con la base de datos, así que no he podido guardar la configuración.'); return; }
+    saveConfigBtn.disabled = true;
+    try{
+      await state.db.doc('settings/family').set({location: val, updatedAt: Date.now()});
+      state.familiaLocation = val;
+      toast('Configuración guardada');
+    }catch(e){ console.warn(e); toast('No he podido guardar la configuración'); }
+    finally{ saveConfigBtn.disabled = false; }
+  });
+  $('#addMemberBtn').addEventListener('click', async ()=>{
+    const input = $('#newMemberName');
+    const name = input.value.trim();
+    if(!name){ toast('Escribe primero el nombre de la persona'); return; }
+    if(!state.db){ toast('No hay conexión con la base de datos, así que no he podido guardarlo.'); return; }
+    try{ await state.db.collection('family').add({name, createdAt:Date.now()}); input.value=''; toast(`${name} se ha añadido a la familia`); }
+    catch(e){ toast('No he podido añadir a esta persona.'); }
+  });
+  $all('[data-removemember]').forEach(b=> b.addEventListener('click', async ()=>{
+    if(!state.db) return;
+    try{ await state.db.doc('family/'+b.dataset.removemember).delete(); toast('Se ha quitado de la familia'); }
+    catch(e){ toast('No he podido quitarlo.'); }
+  }));
+  $all('[data-famchip]').forEach(b=> b.addEventListener('click', ()=>{
+    state.familiaMemberId = b.dataset.famchip; renderMain();
+  }));
+  $all('[data-reasonchip]').forEach(b=> b.addEventListener('click', ()=>{
+    state.familiaReason = b.dataset.reasonchip;
+    $all('[data-reasonchip]').forEach(x=> x.classList.toggle('on', x.dataset.reasonchip===state.familiaReason));
+  }));
+  if($('#famCalendar')) renderFamiliaCalendar();
+}
+
+/* =======================================================================
+   TAB: APARIENCIA
+======================================================================= */
+function renderApariencia(){
+  const swatches = PALETTES.map(p=>`
+    <button type="button" class="palette-swatch ${state.paletteChoice===p.id?'active':''}" data-palette-choice="${p.id}">
+      <span class="ring"><span class="dot" style="background:${p.swatch}"></span></span>
+      <span>${esc(p.label)}</span>
+    </button>`).join('');
+  return `
+    <div class="stack">
+      <div class="card">
+        <h2>Claro u oscuro</h2>
+        <p class="hint">Elige cómo quieres ver la aplicación. "Automático" sigue el ajuste que ya tengas en el teléfono.</p>
+        <div class="segmented" style="margin-top:12px">
+          <button data-theme-choice="light" class="${state.themeChoice==='light'?'active':''}">Claro</button>
+          <button data-theme-choice="dark" class="${state.themeChoice==='dark'?'active':''}">Oscuro</button>
+          <button data-theme-choice="auto" class="${state.themeChoice==='auto'?'active':''}">Automático</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Gama de color</h2>
+        <p class="hint">Elige el tono que más te guste para los botones y los elementos destacados. Los colores del plato (verduras, proteínas, hidratos) no cambian, para que siempre signifiquen lo mismo.</p>
+        <div class="palette-row" style="margin-top:14px">${swatches}</div>
+      </div>
+    </div>
+  `;
+}
+
+function wireAparienciaEvents(){
+  $all('[data-theme-choice]').forEach(b=> b.addEventListener('click', ()=>{
+    setThemeChoice(b.dataset.themeChoice);
+    renderMain();
+  }));
+  $all('[data-palette-choice]').forEach(b=> b.addEventListener('click', ()=>{
+    setPaletteChoice(b.dataset.paletteChoice);
+    renderMain();
+  }));
+}
+
+/* ---------------------------------------------------------------------
+   Wiring dispatcher
+--------------------------------------------------------------------- */
+function wireCurrentTab(){
+  if(state.tab==='recetas') wireRecetasEvents();
+  else if(state.tab==='plan') wirePlanEvents();
+  else if(state.tab==='compra') wireCompraEvents();
+  else if(state.tab==='familia') wireFamiliaEvents();
+  else wireAparienciaEvents();
+}
+
+/* ---------------------------------------------------------------------
+   Boot
+--------------------------------------------------------------------- */
+async function boot(){
+  loadThemeChoice();
+  loadPaletteChoice();
+  wireLogoutButton();
+  await initFirebase();
+  if(state.fb && state.fb.auth){
+    // Fuera de Claude, con cuenta propia: no se muestra nada de la app
+    // hasta saber si hay sesión iniciada o no.
+    state.fb.onAuthStateChanged(state.fb.auth, handleAuthChange);
+    return;
+  }
+  // Dentro de Claude (o sin Firebase disponible): comportamiento clásico,
+  // sin cuentas, usando la capacidad "db" que presta el propio artefacto.
+  showApp();
+  renderMain();
+  await initCapabilities();
+  subscribeCollections();
+  if(!state.db){
+    // still let the person use the form fields; persistence just won't work
+    console.warn('db capability unavailable in this view');
+  }
+}
+
+if(window.claude?.hot){
+  window.claude.hot.ready ? window.claude.hot.ready(boot) : boot();
+} else {
+  boot();
+}
+
+})();
+</script>
