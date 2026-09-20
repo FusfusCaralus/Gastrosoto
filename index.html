@@ -1,4 +1,21 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Gastrosoto</title>
+<meta name="description" content="Recetas y planificación de menús semanales y mensuales para tu familia.">
+
+<!-- Instalable como app (PWA) -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6E8F72">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Gastrosoto">
+<meta name="mobile-web-app-capable" content="yes">
+
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
 <style>
   :root{
@@ -424,6 +441,8 @@
   .auth-error{ background:var(--protein-soft); color:var(--danger); border-radius:var(--radius-sm); padding:9px 12px; font-size:13px; margin-bottom:2px; }
   #logoutBtn svg{ width:18px; height:18px; stroke:var(--ink-soft); fill:none; stroke-width:1.8; }
 </style>
+</head>
+<body>
 
 <div id="authGate" class="auth-gate" hidden></div>
 
@@ -3570,3 +3589,19 @@ if(window.claude?.hot){
 
 })();
 </script>
+
+<!-- Registro del service worker (solo lo necesita el modo instalable/PWA;
+     si esta página se abre dentro de un artefacto de Claude, no pasa
+     nada porque los service workers ahí no están disponibles y esto
+     simplemente no hace nada). -->
+<script>
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', ()=>{
+      navigator.serviceWorker.register('sw.js').catch(()=>{});
+    });
+  }
+</script>
+
+</body>
+</html>
+

@@ -77,13 +77,35 @@ ejemplo una Cloudflare Worker gratuita, o una Firebase Cloud Function
 aunque tiene una capa gratuita generosa). Es un paso aparte y no bloquea
 nada de lo anterior.
 
+## Instalarla en el móvil como una app
+
+Ya está preparada para "Añadir a pantalla de inicio" con icono propio y
+sin la barra del navegador (modo PWA):
+
+- **Android (Chrome):** abre la web, menú ⋮ → **"Instalar aplicación"**
+  (o "Añadir a pantalla de inicio").
+- **iPhone (Safari):** abre la web, botón de compartir (el cuadrado con
+  la flecha hacia arriba) → **"Añadir a pantalla de inicio"**. En iOS
+  tiene que ser desde Safari — desde Chrome en iPhone no funciona este
+  paso, es una limitación de Apple.
+
+Esto solo funciona una vez esté publicada en una URL con **https**
+(GitHub Pages ya lo da automáticamente) — no vale con abrir el archivo
+suelto desde el propio teléfono.
+
 ## Estructura de archivos
 
 ```
 gastrosoto/
-├── index.html          # La aplicación completa (HTML + CSS + JS)
-├── firestore.rules     # Reglas de seguridad: cada cuenta ve solo lo suyo
-└── README.md            # Este archivo
+├── index.html            # La aplicación completa (HTML + CSS + JS)
+├── firestore.rules       # Reglas de seguridad: cada cuenta ve solo lo suyo
+├── manifest.json         # Datos de la app instalable (nombre, icono, colores)
+├── sw.js                 # Service worker: permite instalarla y abrir la carcasa sin red
+├── icon-192.png           # Icono de la app
+├── icon-512.png           # Icono de la app (tamaño grande)
+├── icon-maskable-512.png  # Icono adaptado a las formas de Android (círculo, gota…)
+├── apple-touch-icon.png   # Icono para "Añadir a pantalla de inicio" en iPhone
+└── README.md              # Este archivo
 ```
 
 ## Notas técnicas (por si retomamos esto más adelante)
