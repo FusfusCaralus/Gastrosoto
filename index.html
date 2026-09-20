@@ -122,6 +122,12 @@
   }
 
   *{box-sizing:border-box;}
+  /* #app, nav.tabbar, .auth-gate y .icon-btn fijan su propio "display"
+     con una especificidad mayor que la regla por defecto del navegador
+     para [hidden] (display:none), así que sin esto el atributo "hidden"
+     no llegaba a ocultarlos de verdad: se veían apilados unos encima de
+     otros (la pantalla de acceso Y la app a la vez, con scroll). */
+  [hidden]{ display:none !important; }
   body{
     background:var(--bg);
     color:var(--ink);
